@@ -35,14 +35,37 @@ int main(int argc, char *argv[]){
 
     // Récupération des sections
     for(int i = 0; i < reverse_2(e_header.e_shnum); i++){
-        // Symbole Table
-        if(reverse_4(s_table[i].sh_type) == 2){
-            Elf32_Sym* sym_table;
-            sym_table = malloc(reverse_4(s_table[i].sh_size));
-            if(read_elf_symbole_table(elf1, sym_table, reverse_4(s_table[i].sh_offset), reverse_4(s_table[i].sh_size), reverse_4(s_table[i].sh_entsize))){
-                fprintf(stderr, "couldn't read symbole table\n");
+        switch(reverse_4(s_table[i].sh_type)){
+            // Symbole Table
+            case 2: {
+                Elf32_Sym* sym_table;
+                sym_table = malloc(reverse_4(s_table[i].sh_size));
+                if(read_elf_symbole_table(elf1, sym_table, reverse_4(s_table[i].sh_offset), reverse_4(s_table[i].sh_size), reverse_4(s_table[i].sh_entsize))){
+                    fprintf(stderr, "couldn't read symbole table\n");
+                }
+                free(sym_table);
+                break;
             }
-            free(sym_table);
+            // Relocation Table (with addends)
+            case 4: {
+                Elf32_Rela* rela_table;
+                rela_table = malloc(reverse_4(s_table[i].sh_size));
+                if(read_elf_rela_table(elf1, rela_table, reverse_4(s_table[i].sh_offset), reverse_4(s_table[i].sh_size), reverse_4(s_table[i].sh_entsize))){
+                    fprintf(stderr, "couldn't read relocation table (with addends)\n");
+                }
+                free(rela_table);
+                break;
+            }
+            // Relocation Table (without addends)
+            case 9: {
+                Elf32_Rel* rel_table;
+                rel_table = malloc(reverse_4(s_table[i].sh_size));
+                if(read_elf_rel_table(elf1, rel_table, reverse_4(s_table[i].sh_offset), reverse_4(s_table[i].sh_size), reverse_4(s_table[i].sh_entsize))){
+                    fprintf(stderr, "couldn't read symbole table\n");
+                }
+                free(rel_table);
+                break;
+            }
         }
     }
     free(s_table);
