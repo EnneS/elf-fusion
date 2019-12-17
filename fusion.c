@@ -8,6 +8,8 @@ void usage(char *name) {
 		"%s [ --help ] file1 file2\n\n", name);
 }
 
+
+/* Commentaire teste de push */
 int main(int argc, char *argv[]){
     Elf32_Ehdr header;
     FILE* elf1 = NULL;
