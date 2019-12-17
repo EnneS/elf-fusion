@@ -1,7 +1,7 @@
 #include "elf_reader.h"
 
 int read_elf_header(FILE* file, Elf32_Ehdr* header){
-    if(fread(header, 56, 1, file) < 1){
+    if(fread(header, sizeof(Elf32_Ehdr), 1, file) < 1){
         return -1;
     }
 

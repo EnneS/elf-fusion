@@ -8,12 +8,6 @@ void usage(char *name) {
 		"%s [ --help ] file1 file2\n\n", name);
 }
 
-void prints(unsigned char* str, int len){
-	for(int i = 0; i < len; ++i){
-		printf("%c", str[i]); 
-	}
-}
-
 int main(int argc, char *argv[]){
     Elf32_Ehdr header;
     FILE* elf1 = NULL;
@@ -28,7 +22,7 @@ int main(int argc, char *argv[]){
     if(read_elf_header(elf1, &header)){
         fprintf(stderr, "couldn't recognize elf header\n");
     }
-    prints(header.e_ident, 4);
+
     printf("%s", "\n");
     fclose(elf1);
     fclose(elf2);
