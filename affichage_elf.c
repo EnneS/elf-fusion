@@ -15,7 +15,15 @@ void lire_header(Elf32_Ehdr header) {
     } else {
         printf("ELF32");
     }
-    printf("\n"); 
+    printf("\n");
+
+    if(header.e_ident[5] == 1) {
+        printf("Données : Little Endian"); 
+    } else  {
+        printf("Données : Big Endian"); 
+    }
+    
+    printf("\n");
 
     printf("OS/ABI : ");
     switch(header.e_ident[7]) {
@@ -83,7 +91,7 @@ void lire_header(Elf32_Ehdr header) {
     printf("\n");
 
     printf("Type : ");
-    switch(header.e_type) {
+    switch(reverse_2(header.e_type)) {
         case 0x00:
             printf("NONE");
             break;
@@ -119,19 +127,12 @@ void lire_header(Elf32_Ehdr header) {
 
     
 
-    printf("Machine : ");
-    switch(header.e_machine) {
-        case 62:
-            printf("TESTE");
-            break; 
-        default :
-            printf("Default");
-            break;
-    }
+    printf("Machine : 0x%.2x",reverse_2(header.e_machine));
+   
     printf("\n");
 
     printf("Version : ");
-    switch(header.e_version) {
+    switch(reverse_4(header.e_version)) {
         case 0:
             printf("autre que l'original");
             break; 
@@ -142,36 +143,37 @@ void lire_header(Elf32_Ehdr header) {
             printf("Default");
             break;
     }
+
     printf("\n");
 
-    printf("Adresse du point d'entrée: 0x%.2x",header.e_entry);    
+    printf("Adresse du point d'entrée: 0x%.2x",reverse_4(header.e_entry));    
     printf("\n");
 
-    printf("Début des l'en-têtes de programme: %d (octet dans le fichier)",header.e_phoff);    
+    printf("Début des en-têtes de programme: %d (octet dans le fichier)",reverse_4(header.e_phoff));    
     printf("\n");
 
-    printf("Début des l'en-têtes de sections: %d (octet dans le fichier)",header.e_ehsize);    
+    printf("Début des en-têtes de sections: %d (octet dans le fichier)",reverse_4(header.e_shoff));    
     printf("\n");
 
-    printf("Fanions : 0x%x",header.e_flags);    
+    printf("Fanions : 0x%x",reverse_4(header.e_flags));    
     printf("\n");
 
 
     printf("Taille de cet en-tête : 52 (octet)");    
     printf("\n");
 
-    printf("Taille de l'en-tête du programme: %d (octet)",header.e_phentsize);    
+    printf("Taille de l'en-tête du programme: %d (octet)",reverse_2(header.e_phentsize));    
     printf("\n");
 
-    printf("Nombre d'en-tête du programme: %d",header.e_phnum);    
+    printf("Nombre d'en-tête du programme: %d",reverse_2(header.e_phnum));    
     printf("\n");
 
-    printf("Taille des en-têtes de section: %d (octet)",header.e_shentsize);    
+    printf("Taille des en-têtes de section: %d (octet)",reverse_2(header.e_shentsize));    
     printf("\n");
 
-    printf("Nombre d'en-têtes de section:  %d (octet)",header.e_shnum);    
+    printf("Nombre d'en-têtes de section:  %d (octet)",reverse_2(header.e_shnum));    
     printf("\n");
 
-    printf("Table d'indexes des chaînes d'en-tête de section: %d",header.e_shstrndx);    
+    printf("Table d'indexes des chaînes d'en-tête de section: %d",reverse_2(header.e_shstrndx));    
     printf("\n");
 }
