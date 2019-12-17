@@ -18,6 +18,7 @@ SUBDIRS+=. Examples_loader
 bin_PROGRAMS=
 bin_PROGRAMS+=ARM_runner_example
 bin_PROGRAMS+=fusion
+bin_PROGRAMS+=affichage_en_tete_elf
 
 COMMON=debug.h debug.c util.h util.c
 
@@ -26,6 +27,7 @@ SIMULATOR_INTERFACE=csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_proto
 
 ARM_runner_example_SOURCES=$(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
 fusion_SOURCES=$(COMMON) fusion.c elf_reader.h elf_reader.c
+affichage_en_tete_elf_SOURCES=$(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
 
 EXTRA_DIST+=sample_run.sh
 
