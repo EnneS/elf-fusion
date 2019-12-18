@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
     fclose(elf1);
     fclose(elf2);
-    
+
     (void)elf2;
     (void)elf2_data;
     return 0;

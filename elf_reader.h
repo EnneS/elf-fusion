@@ -12,5 +12,5 @@ int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t 
 void* read_elf_special_table(FILE* file, size_t offset, size_t size, size_t entry_size);
 
 Elf32_data read_elf_data(FILE* file);
-void free_elf_data(Elf32_data file);
+void free_elf_data(Elf32_data elf);
 #endif
