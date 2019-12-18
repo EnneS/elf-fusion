@@ -252,12 +252,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing automake-1.15
+AUTOCONF = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing automake-1.15
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -286,7 +286,7 @@ LEX_OUTPUT_ROOT = lex.yy
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = elf_linker
@@ -301,10 +301,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.0
-abs_builddir = /home/r/royetju/elf-fusion
-abs_srcdir = /home/r/royetju/elf-fusion
-abs_top_builddir = /home/r/royetju/elf-fusion
-abs_top_srcdir = /home/r/royetju/elf-fusion
+abs_builddir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
+abs_srcdir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
+abs_top_builddir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
+abs_top_srcdir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -323,7 +323,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/r/royetju/elf-fusion/build-aux/install-sh
+install_sh = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -346,7 +346,7 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 ACLOCAL_AMFLAGS = -I m4
-AM_CFLAGS = -Wall -Werror -g -D DEBUG -D WARNING -D \
+AM_CFLAGS = -Wall -Werror -g -std=c99 -D DEBUG -D WARNING -D \
 	BIG_ENDIAN_SIMULATOR
 # Uncomment if performance when running with -DDEBUG is an issue
 # Warning, if uncommented, issuing calls to debug functions during options
