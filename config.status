@@ -431,11 +431,11 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion'
+ac_pwd='/home/nathan/git/elf-fusion'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
-AWK='gawk'
+AWK='mawk'
 test -n "$AWK" || AWK=awk
 # The default lists apply if the user does not specify any file.
 ac_need_defaults=:
@@ -598,17 +598,17 @@ cat >>"$ac_tmp/subs1.awk" <<\_ACAWK &&
 S["am__EXEEXT_FALSE"]=""
 S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
-S["HAVE_ARM_COMPILER_FALSE"]="#"
-S["HAVE_ARM_COMPILER_TRUE"]=""
+S["HAVE_ARM_COMPILER_FALSE"]=""
+S["HAVE_ARM_COMPILER_TRUE"]="#"
 S["subdirs_custom"]=" Examples_loader Examples_fusion"
-S["GCC_CROSS"]="arm-none-eabi-gcc"
+S["GCC_CROSS"]="none"
 S["LIBOBJS"]=""
 S["EGREP"]="/bin/grep -E"
 S["GREP"]="/bin/grep"
 S["CPP"]="gcc -E"
-S["LEXLIB"]="-lfl"
-S["LEX_OUTPUT_ROOT"]="lex.yy"
-S["LEX"]="flex"
+S["LEXLIB"]=""
+S["LEX_OUTPUT_ROOT"]=""
+S["LEX"]="${SHELL} /home/nathan/git/elf-fusion/build-aux/missing flex"
 S["am__fastdepCC_FALSE"]="#"
 S["am__fastdepCC_TRUE"]=""
 S["CCDEPMODE"]="depmode=gcc3"
@@ -635,17 +635,17 @@ S["am__tar"]="$${TAR-tar} chof - \"$$tardir\""
 S["AMTAR"]="$${TAR-tar}"
 S["am__leading_dot"]="."
 S["SET_MAKE"]=""
-S["AWK"]="gawk"
+S["AWK"]="mawk"
 S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]=""
-S["install_sh"]="${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/install-sh"
-S["MAKEINFO"]="${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing automake-1.15"
-S["AUTOCONF"]="${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing autoconf"
-S["ACLOCAL"]="${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing aclocal-1.15"
+S["install_sh"]="${SHELL} /home/nathan/git/elf-fusion/build-aux/install-sh"
+S["MAKEINFO"]="${SHELL} /home/nathan/git/elf-fusion/build-aux/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/nathan/git/elf-fusion/build-aux/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/nathan/git/elf-fusion/build-aux/missing automake-1.15"
+S["AUTOCONF"]="${SHELL} /home/nathan/git/elf-fusion/build-aux/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/nathan/git/elf-fusion/build-aux/missing aclocal-1.15"
 S["VERSION"]="1.0"
 S["PACKAGE"]="elf_linker"
 S["CYGPATH_W"]="echo"
@@ -661,13 +661,13 @@ S["ECHO_T"]=""
 S["ECHO_N"]="-n"
 S["ECHO_C"]=""
 S["DEFS"]="-DPACKAGE_NAME=\\\"ELF_Linker\\\" -DPACKAGE_TARNAME=\\\"elf_linker\\\" -DPACKAGE_VERSION=\\\"1.0\\\" -DPACKAGE_STRING=\\\"ELF_Linker\\ 1.0\\\" -DPACKAGE_BUGREPORT=\\\""\
-"Guillaume.Huard@imag.fr\\\" -DPACKAGE_URL=\\\"\\\" -DPACKAGE=\\\"elf_linker\\\" -DVERSION=\\\"1.0\\\" -DYYTEXT_POINTER=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DH"\
-"AVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -D"\
-"HAVE_ARPA_INET_H=1 -DHAVE_FCNTL_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_NETDB_H=1 -DHAVE_NETINET_IN_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STRINGS_H="\
-"1 -DHAVE_SYS_SOCKET_H=1 -DHAVE_SYS_TIME_H=1 -DHAVE_UNISTD_H=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1 -DHAVE_STDLI"\
-"B_H=1 -DHAVE_MALLOC=1 -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_STDLIB_H=1 -DHAVE_REALLOC=1"\
-" -DHAVE_ALARM=1 -DHAVE_BZERO=1 -DHAVE_DUP2=1 -DHAVE_GETHOSTBYADDR=1 -DHAVE_GETHOSTBYNAME=1 -DHAVE_MUNMAP=1 -DHAVE_SELECT=1 -DHAVE_SOCKET=1 -DHAVE_ST"\
-"RERROR=1 -DHAVE_MEMSET=1"
+"Guillaume.Huard@imag.fr\\\" -DPACKAGE_URL=\\\"\\\" -DPACKAGE=\\\"elf_linker\\\" -DVERSION=\\\"1.0\\\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -D"\
+"HAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_ARPA_INET_H=1 "\
+"-DHAVE_FCNTL_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_NETDB_H=1 -DHAVE_NETINET_IN_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STRINGS_H=1 -DHAVE_SYS_SOCKET"\
+"_H=1 -DHAVE_SYS_TIME_H=1 -DHAVE_UNISTD_H=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC"\
+"=1 -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_STDLIB_H=1 -DHAVE_REALLOC=1 -DHAVE_ALARM=1 -DH"\
+"AVE_BZERO=1 -DHAVE_DUP2=1 -DHAVE_GETHOSTBYADDR=1 -DHAVE_GETHOSTBYNAME=1 -DHAVE_MUNMAP=1 -DHAVE_SELECT=1 -DHAVE_SOCKET=1 -DHAVE_STRERROR=1 -DHAVE_MEM"\
+"SET=1"
 S["mandir"]="${datarootdir}/man"
 S["localedir"]="${datarootdir}/locale"
 S["libdir"]="${exec_prefix}/lib"

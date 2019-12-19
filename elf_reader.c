@@ -20,9 +20,16 @@ int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t 
 void* read_elf_special_table(FILE* file, size_t offset, size_t size, size_t entry_size){
     fseek(file, offset, SEEK_SET);
     void* table = malloc(size);
-    int nb_entries = size / entry_size;
-    if(fread(table, entry_size, nb_entries, file) < nb_entries)
+    int nb_entries = 1;
+    int size_to_read = size;
+    // If the section has entries
+    if(entry_size > 0) {
+        nb_entries = size / entry_size;
+        size_to_read = entry_size;
+    }
+    if(fread(table, size_to_read, nb_entries, file) < nb_entries){
         return NULL;
+    }
     return table;
 }
 
@@ -61,16 +68,17 @@ Elf32_data read_elf_data(FILE* file){
     // Récupération des sections
     size_t rela_index, rel_index, str_index;
     rela_index = rel_index = 0;
-    str_index = elf_data.e_header.e_shstrndx;
-    for(i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
+    str_index = reverse_2(elf_data.e_header.e_shstrndx);
+    for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
         size_t sh_offset = reverse_4(elf_data.shdr_table[i].sh_offset);
         size_t sh_size = reverse_4(elf_data.shdr_table[i].sh_size);
         size_t sh_entsize = reverse_4(elf_data.shdr_table[i].sh_entsize);
         size_t sh_type = reverse_4(elf_data.shdr_table[i].sh_type);
 
         // String Table
-        if(sh_type == str_index){
+        if(i == str_index){
             elf_data.str_table = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);
+            elf_data.str_table_size = sh_size;
             if(!elf_data.str_table){
                 fprintf(stderr, "couldn't read string table\n");
             }
@@ -88,7 +96,7 @@ Elf32_data read_elf_data(FILE* file){
             // Relocation Table (with addends)
             case 4:
                 elf_data.rela_tables[rela_index] = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);
-                if(!elf_data.symbol_table){
+                if(!elf_data.rela_tables[rela_index]){
                     fprintf(stderr, "couldn't read relocation table (with addends)\n");
                 }
                 break;
@@ -97,7 +105,7 @@ Elf32_data read_elf_data(FILE* file){
             // Relocation Table (without addends)
             case 9:
                 elf_data.rel_tables[rel_index] = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);
-                if(!elf_data.symbol_table){
+                if(!elf_data.rel_tables[rel_index]){
                     fprintf(stderr, "couldn't read relocation table (without addends)\n");
                 }
                 break;
@@ -116,8 +124,9 @@ void free_elf_data(Elf32_data elf){
     }
     free(elf.rela_tables);
 
-    for(i = 0; i < elf.rel_tables_size; i++){
+    for(int i = 0; i < elf.rel_tables_size; i++){
         free(elf.rel_tables[i]);
     }
     free(elf.rel_tables);
+    free(elf.str_table);
 }

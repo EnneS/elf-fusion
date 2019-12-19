@@ -23,7 +23,12 @@ elf_reader.o: elf_reader.c /usr/include/stdc-predef.h elf_reader.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /usr/include/x86_64-linux-gnu/bits/auxv.h
+ /usr/include/x86_64-linux-gnu/bits/auxv.h elf_file.h \
+ /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/floatn.h \
+ /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib.h util.h
 
 /usr/include/stdc-predef.h:
 
@@ -84,3 +89,19 @@ elf_reader.h:
 /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
 
 /usr/include/x86_64-linux-gnu/bits/auxv.h:
+
+elf_file.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/x86_64-linux-gnu/bits/floatn.h:
+
+/usr/include/x86_64-linux-gnu/bits/floatn-common.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib.h:
+
+util.h:
