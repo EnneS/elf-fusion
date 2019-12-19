@@ -98,27 +98,27 @@ void print_elf_header(Elf32_Ehdr header) {
 void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, size_t nb_sections, char* str_table){
     printf("Il y a %ld en-tête de sections, commençant au décalage 0x%lx\n\n", nb_sections, offset_sections);
     printf("En-têtes de section:\n");
-    printf("[No] Nom                Type     Addr     Deca   Taille ES Flg Ln Inf Al\n");
+    printf("  [No] Nom                Type         Addr     Deca   Taille ES Flg Ln Inf Al\n");
     for(int i = 0; i < nb_sections; i++){
         //ID
-        printf("[%2d]", i);
+        printf("  [%2d]", i);
         //NOM
         printf(" %-18s", &str_table[reverse_4(shdr_table[i].sh_name)]);
         //TYPE
         int type = reverse_4(shdr_table[i].sh_type);
         if(type < 12){
-            printf(" %-8s", SECTION_TYPE[type]);
+            printf(" %-12s", SECTION_TYPE[type]);
         }
-        else if(type >= 0x60000000 && type <= 0x6fffffff){
-            printf(" %-8s", "OS");
+        else if(type >= SHT_LOOS && type <= SHT_HIOS){
+            printf(" %-12s", "OS");
         }
-        else if(type >= 0x70000000 && type <= 0x7fffffff){
-            printf(" %-8s", "PROC");
+        else if(type >= SHT_LOPROC && type <= SHT_HIPROC){
+            printf(" %-12s", "PROC");
         }
-        else if(type >= 0x80000000 && type <= 0xffffffff){
-            printf(" %-8s", "USER");
+        else if(type >= SHT_LOUSER && type <= SHT_HIUSER){
+            printf(" %-12s", "USER");
         } else {
-            printf(" %-8s", " ");
+            printf(" %-12s", " ");
         }
         
 
