@@ -59,14 +59,24 @@ Elf32_data read_elf_data(FILE* file){
     elf_data.rel_tables = malloc(rel_count * sizeof(Elf32_Rel*));
 
     // Récupération des sections
-    size_t rela_index, rel_index;
+    size_t rela_index, rel_index, str_index;
     rela_index = rel_index = 0;
+    str_index = elf_data.e_header.e_shstrndx;
     for(i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
         size_t sh_offset = reverse_4(elf_data.shdr_table[i].sh_offset);
         size_t sh_size = reverse_4(elf_data.shdr_table[i].sh_size);
         size_t sh_entsize = reverse_4(elf_data.shdr_table[i].sh_entsize);
+        size_t sh_type = reverse_4(elf_data.shdr_table[i].sh_type);
 
-        switch(reverse_4(elf_data.shdr_table[i].sh_type)){
+        // String Table
+        if(sh_type == str_index){
+            elf_data.str_table = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);
+            if(!elf_data.str_table){
+                fprintf(stderr, "couldn't read string table\n");
+            }
+        }
+
+        switch(sh_type){
             // Symbole Table
             case 2:
                 elf_data.symbol_table = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);

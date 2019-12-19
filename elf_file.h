@@ -4,6 +4,7 @@
 typedef struct{
     Elf32_Ehdr e_header;
     Elf32_Shdr* shdr_table;
+    char* str_table;
     Elf32_Sym* symbol_table;
     Elf32_Rela** rela_tables;
     size_t rela_tables_size;
