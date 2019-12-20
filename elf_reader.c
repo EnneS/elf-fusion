@@ -49,13 +49,15 @@ Elf32_data read_elf_data(FILE* file){
         }
     }
     elf_data.rela_tables_size = rela_count;
-    elf_data.rela_tables = malloc(rela_count * sizeof(Elf32_Rela*));
+    elf_data.rela_tables = malloc(rela_count * sizeof(Elf32_RelaTable));
 
     elf_data.rel_tables_size = rel_count;
-    elf_data.rel_tables = malloc(rel_count * sizeof(Elf32_Rel*));
+    elf_data.rel_tables = malloc(rel_count * sizeof(Elf32_RelTable));
 
     elf_data.progbits_nbr = progbits_nbr;
     elf_data.progbits_sections = malloc(progbits_nbr * sizeof(uint8_t*));
+
+    hash_init(&elf_data.sections_table, 32);
 
     // Récupération des sections
     size_t rela_index, rel_index, str_index, progbits_index;
@@ -66,6 +68,8 @@ Elf32_data read_elf_data(FILE* file){
         size_t sh_offset = reverse_4(elf_data.shdr_table[i].sh_offset);
         size_t sh_size = reverse_4(elf_data.shdr_table[i].sh_size);
         size_t sh_type = reverse_4(elf_data.shdr_table[i].sh_type);
+        size_t sh_entsize = reverse_4(elf_data.shdr_table[i].sh_entsize);
+        size_t nb_entries = sh_entsize > 0 ? (sh_size / sh_entsize) : 1;
 
         if(sh_size == 0)
             continue;
@@ -96,13 +100,19 @@ Elf32_data read_elf_data(FILE* file){
 
             // Relocation Table (with addends)
             case SHT_RELA:
-                elf_data.rela_tables[rela_index] = (Elf32_Rela*) elf_data.sections_data[i];
+                elf_data.rela_tables[rela_index].rela_table = (Elf32_Rela*) elf_data.sections_data[i];
+                elf_data.rela_tables[rela_index].rela_table_size = nb_entries;
+                elf_data.rela_tables[rela_index].rela_table_name = elf_data.shdr_table[i].sh_name;
+                elf_data.rela_tables[rela_index].rela_table_offset = elf_data.shdr_table[i].sh_offset;
                 rela_index++;
                 break;
                 
             // Relocation Table (without addends)
             case SHT_REL:
-                elf_data.rel_tables[rel_index] = (Elf32_Rel*) elf_data.sections_data[i];
+                elf_data.rel_tables[rel_index].rel_table = (Elf32_Rel*) elf_data.sections_data[i];
+                elf_data.rel_tables[rel_index].rel_table_size = nb_entries;
+                elf_data.rel_tables[rel_index].rel_table_name = elf_data.shdr_table[i].sh_name;
+                elf_data.rel_tables[rel_index].rel_table_offset = elf_data.shdr_table[i].sh_offset;
                 rel_index++;
                 break;
         }
@@ -111,6 +121,9 @@ Elf32_data read_elf_data(FILE* file){
             elf_data.sm_str_table = (char*) elf_data.sections_data[i];
             elf_data.sm_str_table_size = sh_size;
         }
+    }
+    for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
+        hash_insert(&elf_data.sections_table, get_name(&elf_data, i), i);
     }
     return elf_data;
 }
