@@ -4,6 +4,8 @@
 #include "util.h"
 #include "elf.h"
 #include "stdlib.h"
+#include "string.h"
+#include "hashtable.h"
 
 typedef struct{
     Elf32_Ehdr e_header;
@@ -27,6 +29,8 @@ typedef struct{
 
     Elf32_Rel**  rel_tables;
     size_t rel_tables_size;
+
+    hash_t sections_table;
 }Elf32_data;
 
 

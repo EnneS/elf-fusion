@@ -57,6 +57,8 @@ Elf32_data read_elf_data(FILE* file){
     elf_data.progbits_nbr = progbits_nbr;
     elf_data.progbits_sections = malloc(progbits_nbr * sizeof(uint8_t*));
 
+    hash_init(&elf_data.sections_table, 32);
+
     // Récupération des sections
     size_t rela_index, rel_index, str_index, progbits_index;
     rela_index = rel_index = progbits_index = 0;
@@ -111,6 +113,9 @@ Elf32_data read_elf_data(FILE* file){
             elf_data.sm_str_table = (char*) elf_data.sections_data[i];
             elf_data.sm_str_table_size = sh_size;
         }
+    }
+    for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
+        hash_insert(&elf_data.sections_table, get_name(&elf_data, i), i);
     }
     return elf_data;
 }

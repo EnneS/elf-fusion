@@ -32,6 +32,8 @@ Elf32_data concat_all_sections(Elf32_data base, Elf32_data source){
     result.e_header.e_shnum = reverse_2(shnum);
     result.shdr_table = malloc(sizeof(Elf32_Shdr) * shnum);
     result.sections_data = malloc(sizeof(uint8_t*) * shnum);
+
+    memcpy(result.shdr_table, base.shdr_table, base.e_header.e_shnum);
     
     return result;
 }
