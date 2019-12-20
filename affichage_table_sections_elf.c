@@ -12,10 +12,6 @@ int main(int argc, char ** argv) {
     if(read_elf_header(input, &header)){
         fprintf(stderr, "couldn't recognize elf header\n");
     }
-    if(read_elf_section_table(input, &sections_table, reverse_4(header.e_shoff), reverse_2(header.e_shnum), reverse_2(header.e_shentsize))) {
-        afficher_table_sections(sections_table, header, input);        
-    }
-
     fclose(input);
     return 0;
 }

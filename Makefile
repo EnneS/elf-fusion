@@ -118,7 +118,8 @@ affichage_en_tete_elf_OBJECTS = $(am_affichage_en_tete_elf_OBJECTS)
 affichage_en_tete_elf_LDADD = $(LDADD)
 affichage_en_tete_elf_DEPENDENCIES =
 am_fusion_OBJECTS = $(am__objects_1) fusion.$(OBJEXT) \
-	elf_reader.$(OBJEXT)
+	elf_reader.$(OBJEXT) elf_file.$(OBJEXT) \
+	affichage_elf.$(OBJEXT) elf_fusion.$(OBJEXT)
 fusion_OBJECTS = $(am_fusion_OBJECTS)
 fusion_LDADD = $(LDADD)
 fusion_DEPENDENCIES =
@@ -252,27 +253,27 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/nathan/git/elf-fusion/build-aux/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing automake-1.15
-AWK = gawk
+AUTOCONF = ${SHELL} /home/nathan/git/elf-fusion/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/nathan/git/elf-fusion/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/nathan/git/elf-fusion/build-aux/missing automake-1.15
+AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
-DEFS = -DPACKAGE_NAME=\"ELF_Linker\" -DPACKAGE_TARNAME=\"elf_linker\" -DPACKAGE_VERSION=\"1.0\" -DPACKAGE_STRING=\"ELF_Linker\ 1.0\" -DPACKAGE_BUGREPORT=\"Guillaume.Huard@imag.fr\" -DPACKAGE_URL=\"\" -DPACKAGE=\"elf_linker\" -DVERSION=\"1.0\" -DYYTEXT_POINTER=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_ARPA_INET_H=1 -DHAVE_FCNTL_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_NETDB_H=1 -DHAVE_NETINET_IN_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STRINGS_H=1 -DHAVE_SYS_SOCKET_H=1 -DHAVE_SYS_TIME_H=1 -DHAVE_UNISTD_H=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1 -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_STDLIB_H=1 -DHAVE_REALLOC=1 -DHAVE_ALARM=1 -DHAVE_BZERO=1 -DHAVE_DUP2=1 -DHAVE_GETHOSTBYADDR=1 -DHAVE_GETHOSTBYNAME=1 -DHAVE_MUNMAP=1 -DHAVE_SELECT=1 -DHAVE_SOCKET=1 -DHAVE_STRERROR=1 -DHAVE_MEMSET=1
+DEFS = -DPACKAGE_NAME=\"ELF_Linker\" -DPACKAGE_TARNAME=\"elf_linker\" -DPACKAGE_VERSION=\"1.0\" -DPACKAGE_STRING=\"ELF_Linker\ 1.0\" -DPACKAGE_BUGREPORT=\"Guillaume.Huard@imag.fr\" -DPACKAGE_URL=\"\" -DPACKAGE=\"elf_linker\" -DVERSION=\"1.0\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_ARPA_INET_H=1 -DHAVE_FCNTL_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_NETDB_H=1 -DHAVE_NETINET_IN_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_STRINGS_H=1 -DHAVE_SYS_SOCKET_H=1 -DHAVE_SYS_TIME_H=1 -DHAVE_UNISTD_H=1 -DHAVE_FORK=1 -DHAVE_VFORK=1 -DHAVE_WORKING_VFORK=1 -DHAVE_WORKING_FORK=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1 -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_PARAM_H=1 -DHAVE_GETPAGESIZE=1 -DHAVE_MMAP=1 -DHAVE_STDLIB_H=1 -DHAVE_REALLOC=1 -DHAVE_ALARM=1 -DHAVE_BZERO=1 -DHAVE_DUP2=1 -DHAVE_GETHOSTBYADDR=1 -DHAVE_GETHOSTBYNAME=1 -DHAVE_MUNMAP=1 -DHAVE_SELECT=1 -DHAVE_SOCKET=1 -DHAVE_STRERROR=1 -DHAVE_MEMSET=1
 DEPDIR = .deps
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
 EGREP = /bin/grep -E
 EXEEXT = 
-GCC_CROSS = arm-none-eabi-gcc
+GCC_CROSS = none
 GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
@@ -280,13 +281,13 @@ INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
-LEX = flex
-LEXLIB = -lfl
-LEX_OUTPUT_ROOT = lex.yy
+LEX = ${SHELL} /home/nathan/git/elf-fusion/build-aux/missing flex
+LEXLIB = 
+LEX_OUTPUT_ROOT = 
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/nathan/git/elf-fusion/build-aux/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = elf_linker
@@ -301,10 +302,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.0
-abs_builddir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
-abs_srcdir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
-abs_top_builddir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
-abs_top_srcdir = /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion
+abs_builddir = /home/nathan/git/elf-fusion
+abs_srcdir = /home/nathan/git/elf-fusion
+abs_top_builddir = /home/nathan/git/elf-fusion
+abs_top_srcdir = /home/nathan/git/elf-fusion
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -323,7 +324,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/d/deneuxsr/Documents/Prog5/PROJET-ELF/GIT2_TheGitening/elf-fusion/build-aux/install-sh
+install_sh = ${SHELL} /home/nathan/git/elf-fusion/build-aux/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -358,7 +359,7 @@ COMMON = debug.h debug.c util.h util.c
 EXTRA_DIST = filtre.pl sample_run.sh
 SIMULATOR_INTERFACE = csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
 ARM_runner_example_SOURCES = $(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
-fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h
+fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c
 affichage_en_tete_elf_SOURCES = $(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
 all: all-recursive
 
@@ -464,6 +465,8 @@ include ./$(DEPDIR)/affichage_en_tete_elf.Po
 include ./$(DEPDIR)/arm_simulator_interface.Po
 include ./$(DEPDIR)/csapp.Po
 include ./$(DEPDIR)/debug.Po
+include ./$(DEPDIR)/elf_file.Po
+include ./$(DEPDIR)/elf_fusion.Po
 include ./$(DEPDIR)/elf_reader.Po
 include ./$(DEPDIR)/fusion.Po
 include ./$(DEPDIR)/gdb_protocol.Po

@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "getopt.h"
 #include "elf_reader.h"
+#include "affichage_elf.h"
 
 void usage(char *name) {
 	fprintf(stderr, "Usage:\n"
@@ -21,6 +22,12 @@ int main(int argc, char *argv[]){
 	elf2 = fopen(argv[2], "r");
 
     elf1_data = read_elf_data(elf1);
+
+    //print_elf_header(elf1_data.e_header);
+    //print_section_header_table(elf1_data.shdr_table, reverse_4(elf1_data.e_header.e_shoff), reverse_2(elf1_data.e_header.e_shnum), elf1_data.str_table);
+
+    print_section_data(elf1_data.shdr_table, elf1_data.str_table, elf1_data.sections_data, 3);
+
     free_elf_data(elf1_data);
 
     fclose(elf1);
