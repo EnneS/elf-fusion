@@ -100,6 +100,8 @@ Elf32_data read_elf_data(FILE* file){
             case SHT_RELA:
                 elf_data.rela_tables[rela_index].rela_table = (Elf32_Rela*) elf_data.sections_data[i];
                 elf_data.rela_tables[rela_index].rela_table_size = nb_entries;
+                elf_data.rela_tables[rela_index].rela_table_name = elf_data.shdr_table[i].sh_name;
+                elf_data.rela_tables[rela_index].rela_table_offset = elf_data.shdr_table[i].sh_offset;
                 rela_index++;
                 break;
                 
@@ -107,6 +109,8 @@ Elf32_data read_elf_data(FILE* file){
             case SHT_REL:
                 elf_data.rel_tables[rel_index].rel_table = (Elf32_Rel*) elf_data.sections_data[i];
                 elf_data.rel_tables[rel_index].rel_table_size = nb_entries;
+                elf_data.rel_tables[rel_index].rel_table_name = elf_data.shdr_table[i].sh_name;
+                elf_data.rel_tables[rel_index].rel_table_offset = elf_data.shdr_table[i].sh_offset;
                 rel_index++;
                 break;
         }

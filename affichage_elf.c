@@ -44,8 +44,6 @@ char * SYMBOL_VISIBILITY[4] = {
     "PROTECTED"
 };
 
-
-
 void print_elf_header(Elf32_Ehdr header) {
     printf("En tête ELF :\n");
     printf("Magique : ");
@@ -279,6 +277,45 @@ void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
     }
 }
 
-void print_relocation_table(Elf32_Rel** rel_tables, size_t rel_tables_size, Elf32_Rela** rela_tables, size_t rela_tables_size, char* str_table){
-    
+void print_relocation_table(Elf32_RelTable* rel_tables, size_t rel_tables_size, Elf32_RelaTable* rela_tables, size_t rela_tables_size, char* str_table, Elf32_Sym* symbole_table, Elf32_Shdr* shdr_table){
+    for(int i = 0; i < rel_tables_size; i++){
+        Elf32_RelTable rel_table = rel_tables[i];
+        Elf32_Off offset = reverse_4(rel_table.rel_table_offset);
+        size_t nb_entries = rel_table.rel_table_size;
+        printf("Section de réadressage '%s' à l'adresse de décalage 0x%x contient %ld entrées:\n", &str_table[reverse_4(rel_table.rel_table_name)], offset, nb_entries);
+        printf(" Décalage   Info   Type  Val.-sym  Noms-symboles\n");
+        for(int j = 0; j < rel_table.rel_table_size; j++){
+            Elf32_Rel rel = rel_table.rel_table[j];
+            printf("%-10.8x", reverse_4(rel.r_offset));
+            printf("%-9.8x", reverse_4(rel.r_info));
+            int type = ELF32_R_TYPE(reverse_4(rel.r_info));
+            printf("%4d ", type);
+            int symbol = ELF32_R_SYM(reverse_4(rel.r_info));
+            printf("%9.8x ", symbol);
+            int section_index = reverse_2(symbole_table[symbol].st_shndx);
+            printf("%14s", &str_table[reverse_4(shdr_table[section_index].sh_name)]);
+            printf("\n");
+        }
+        printf("\n");
+    }
+
+    for(int i = 0; i < rela_tables_size; i++){
+        Elf32_RelaTable rela_table = rela_tables[i];
+        Elf32_Off offset = reverse_4(rela_table.rela_table_offset);
+        size_t nb_entries = rela_table.rela_table_size;
+        printf("Section de réadressage '%s' à l'adresse de décalage 0x%x contient %ld entrées:\n", &str_table[reverse_4(rela_table.rela_table_name)], offset, nb_entries);
+        printf(" Décalage   Info   Type  Val.-sym  Noms-symboles\n");
+        for(int j = 0; j < rela_table.rela_table_size; j++){
+            Elf32_Rela rela = rela_table.rela_table[j];
+            printf("%-10.8x", reverse_4(rela.r_offset));
+            printf("%-9.8x", reverse_4(rela.r_info));
+            int type = ELF32_R_TYPE(reverse_4(rela.r_info));
+            printf("%4d ", type);
+            int symbol = ELF32_R_SYM(reverse_4(rela.r_info));
+            printf("%-8.8x", symbol);
+            int section_index = reverse_2(symbole_table[symbol].st_shndx);
+            printf("%-12s", &str_table[reverse_4(shdr_table[section_index].sh_name)]);
+            printf("\n");
+        }
+    }
 }

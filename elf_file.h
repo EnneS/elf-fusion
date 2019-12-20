@@ -8,11 +8,15 @@
 typedef struct{
     Elf32_Rela* rela_table;
     size_t rela_table_size;
+    Elf32_Word rela_table_name;
+    Elf32_Off rela_table_offset;
 }Elf32_RelaTable;
 
 typedef struct{
     Elf32_Rel* rel_table;
     size_t rel_table_size;
+    Elf32_Word rel_table_name;
+    Elf32_Off rel_table_offset;
 }Elf32_RelTable;
 
 typedef struct{
