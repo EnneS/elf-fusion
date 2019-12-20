@@ -61,7 +61,7 @@ Elf32_data read_elf_data(FILE* file){
     // Récupération des sections
     size_t rela_index, rel_index;
     rela_index = rel_index = 0;
-    for(i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
+    for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
         size_t sh_offset = reverse_4(elf_data.shdr_table[i].sh_offset);
         size_t sh_size = reverse_4(elf_data.shdr_table[i].sh_size);
         size_t sh_entsize = reverse_4(elf_data.shdr_table[i].sh_entsize);

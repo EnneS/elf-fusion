@@ -28,6 +28,7 @@ SIMULATOR_INTERFACE=csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_proto
 ARM_runner_example_SOURCES=$(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
 fusion_SOURCES=$(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h
 affichage_en_tete_elf_SOURCES=$(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
+affichage_table_sections_elf=$(COMMON) affichage_table_sections_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
 
 EXTRA_DIST+=sample_run.sh
 
