@@ -102,8 +102,10 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
     for(int i = 0; i < nb_sections; i++){
         //ID
         printf("  [%2d]", i);
+
         //NOM
         printf(" %-18s", &str_table[reverse_4(shdr_table[i].sh_name)]);
+
         //TYPE
         int type = reverse_4(shdr_table[i].sh_type);
         if(type < 12){
@@ -121,7 +123,6 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
             printf(" %-12s", " ");
         }
         
-
         // ADDR
         printf(" %8.8x", reverse_4(shdr_table[i].sh_addr));
 
@@ -134,10 +135,10 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
         // TAILLE D'UNE ENTREE
         printf(" %2.2x", reverse_4(shdr_table[i].sh_entsize));
 
+        // FLAGS
         char flags[4] = "\0\0\0";
         int flag_count = 0;
         int flag = reverse_4(shdr_table[i].sh_flags);
-
         if(flag & SHF_WRITE) {flags[flag_count] = 'W'; flag_count++;}
         if(flag & SHF_ALLOC) {flags[flag_count] = 'A'; flag_count++;} 
         if(flag & SHF_EXECINSTR) {flags[flag_count] = 'X'; flag_count++;}
@@ -153,13 +154,56 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
         if(flag & SHF_MASKPROC) {flags[flag_count] = 'p'; flag_count++;}
         printf(" %3s", flags);
 
+        // LINK
         printf(" %2d", reverse_4(shdr_table[i].sh_link));
+
+        // INFO
         printf(" %3d", reverse_4(shdr_table[i].sh_info));
+
+        // ADDR ALIGN
         printf(" %2d", reverse_4(shdr_table[i].sh_addralign));
 
         printf("\n");
-
     }
     printf("Key to Flags:\n\tW (write), A (alloc), X (execute), M (merge), S (strings), I (info),\n\tL (link order), O (extra OS processing required), G (group), T (TLS), \n\tC (compressed), x (unknown), o (OS specific), E (exclude),\n\ty (purecode), p (processor specific)\n");
+}
 
+void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** sections_data, size_t num){
+    uint8_t* section_data = sections_data[num];
+    size_t size = reverse_4(shdr_table[num].sh_size);
+    char* section_name = &str_table[reverse_4(shdr_table[num].sh_name)];
+    if(size > 0) {
+        int width = 4;
+        int height = size/(4*width);
+        int line_length = (size*2) % (width*8);
+        int width_to_complete = width*8 + width - line_length - line_length/8;
+        printf("Dump hexadécimal de la section '%s':\n", section_name);
+        for(int i = 0; i <= height; i+=1){
+            // HEXA
+            printf("  0x%.8x ", i*16);
+            for(int j = 0; (j < width*4) & ((i*width*4)+j < size); j+=4){
+                if((i*width*4)+j < size)
+                    printf("%.2x",section_data[(i*width*4)+j]);
+                if((i*width*4)+j+1 < size)         
+                    printf("%.2x",section_data[(i*width*4)+(j+1)]);
+                if((i*width*4)+j+2 < size)
+                    printf("%.2x",section_data[(i*width*4)+(j+2)]);
+                if((i*width*4)+j+3 < size)
+                    printf("%.2x ",section_data[(i*width*4)+(j+3)]);
+            }
+            if(i == size/(4*width))
+                printf("%*s", width_to_complete, "");
+            // ASCI
+            for(int j = 0; (j < width*4) & ((i*width*4)+j < size); j++){
+                if(isprint(section_data[(i*width*4)+j]))
+                    printf("%c", section_data[(i*width*4)+j]);
+                else
+                    printf(".");
+            }
+            printf("\n");
+        }
+    } else {
+        printf("Section '%s' n'a pas de donnée à dump.", section_name);
+    }
+    printf("\n");
 }

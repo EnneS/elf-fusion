@@ -118,7 +118,8 @@ affichage_en_tete_elf_OBJECTS = $(am_affichage_en_tete_elf_OBJECTS)
 affichage_en_tete_elf_LDADD = $(LDADD)
 affichage_en_tete_elf_DEPENDENCIES =
 am_fusion_OBJECTS = $(am__objects_1) fusion.$(OBJEXT) \
-	elf_reader.$(OBJEXT) affichage_elf.$(OBJEXT)
+	elf_reader.$(OBJEXT) elf_file.$(OBJEXT) \
+	affichage_elf.$(OBJEXT) elf_fusion.$(OBJEXT)
 fusion_OBJECTS = $(am_fusion_OBJECTS)
 fusion_LDADD = $(LDADD)
 fusion_DEPENDENCIES =
@@ -358,7 +359,7 @@ COMMON = debug.h debug.c util.h util.c
 EXTRA_DIST = filtre.pl sample_run.sh
 SIMULATOR_INTERFACE = csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
 ARM_runner_example_SOURCES = $(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
-fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h affichage_elf.h affichage_elf.c 
+fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c
 affichage_en_tete_elf_SOURCES = $(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
 all: all-recursive
 
@@ -464,6 +465,8 @@ include ./$(DEPDIR)/affichage_en_tete_elf.Po
 include ./$(DEPDIR)/arm_simulator_interface.Po
 include ./$(DEPDIR)/csapp.Po
 include ./$(DEPDIR)/debug.Po
+include ./$(DEPDIR)/elf_file.Po
+include ./$(DEPDIR)/elf_fusion.Po
 include ./$(DEPDIR)/elf_reader.Po
 include ./$(DEPDIR)/fusion.Po
 include ./$(DEPDIR)/gdb_protocol.Po
