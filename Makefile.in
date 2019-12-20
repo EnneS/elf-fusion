@@ -112,7 +112,7 @@ ARM_runner_example_OBJECTS = $(am_ARM_runner_example_OBJECTS)
 ARM_runner_example_LDADD = $(LDADD)
 ARM_runner_example_DEPENDENCIES =
 am_affichage_executable_OBJECTS = $(am__objects_1) \
-	affichage_en_tete_elf.$(OBJEXT) affichage_elf.$(OBJEXT) \
+	affichage_executable.$(OBJEXT) affichage_elf.$(OBJEXT) \
 	elf_reader.$(OBJEXT)
 affichage_executable_OBJECTS = $(am_affichage_executable_OBJECTS)
 affichage_executable_LDADD = $(LDADD)
@@ -347,7 +347,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-AM_CFLAGS = -Wall -Werror -g -std=c99 -D DEBUG -D WARNING -D \
+AM_CFLAGS = -Wall -Werror -g -D DEBUG -D WARNING -D \
 	BIG_ENDIAN_SIMULATOR
 # Uncomment if performance when running with -DDEBUG is an issue
 # Warning, if uncommented, issuing calls to debug functions during options
@@ -360,7 +360,7 @@ EXTRA_DIST = filtre.pl sample_run.sh
 SIMULATOR_INTERFACE = csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
 ARM_runner_example_SOURCES = $(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
 fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c
-affichage_executable_SOURCES = $(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
+affichage_executable_SOURCES = $(COMMON) affichage_executable.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
 all: all-recursive
 
 .SUFFIXES:
@@ -461,7 +461,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ARM_runner_example.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affichage_elf.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affichage_en_tete_elf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/affichage_executable.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/arm_simulator_interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csapp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug.Po@am__quote@
