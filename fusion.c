@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
 
     print_symbol_table(elf1_data.symbol_table, elf1_data.symbol_table_size, elf1_data.sm_str_table);
 
-    print_section_data(elf1_data.shdr_table, elf1_data.str_table, elf1_data.sections_data, 3);
+    print_section_data(elf1_data.shdr_table, elf1_data.str_table, elf1_data.sections_data, 6);
 
     free_elf_data(elf1_data);
 

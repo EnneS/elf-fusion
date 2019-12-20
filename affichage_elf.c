@@ -278,3 +278,7 @@ void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
 
     }
 }
+
+void print_relocation_table(Elf32_Rel** rel_tables, size_t rel_tables_size, Elf32_Rela** rela_tables, size_t rela_tables_size, char* str_table){
+    
+}
