@@ -33,7 +33,7 @@ Elf32_data concat_all_sections(Elf32_data base, Elf32_data source){
     result.shdr_table = malloc(sizeof(Elf32_Shdr) * shnum);
     result.sections_data = malloc(sizeof(uint8_t*) * shnum);
     
-    return empty;
+    return result;
 }
 
 Elf32_data merge(Elf32_data base, Elf32_data source){
