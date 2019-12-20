@@ -87,7 +87,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = ARM_runner_example$(EXEEXT) fusion$(EXEEXT) \
-	affichage_en_tete_elf$(EXEEXT)
+	affichage_executable$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/hostsubdir.m4 \
@@ -111,12 +111,12 @@ am_ARM_runner_example_OBJECTS = $(am__objects_1) $(am__objects_2) \
 ARM_runner_example_OBJECTS = $(am_ARM_runner_example_OBJECTS)
 ARM_runner_example_LDADD = $(LDADD)
 ARM_runner_example_DEPENDENCIES =
-am_affichage_en_tete_elf_OBJECTS = $(am__objects_1) \
+am_affichage_executable_OBJECTS = $(am__objects_1) \
 	affichage_en_tete_elf.$(OBJEXT) affichage_elf.$(OBJEXT) \
 	elf_reader.$(OBJEXT)
-affichage_en_tete_elf_OBJECTS = $(am_affichage_en_tete_elf_OBJECTS)
-affichage_en_tete_elf_LDADD = $(LDADD)
-affichage_en_tete_elf_DEPENDENCIES =
+affichage_executable_OBJECTS = $(am_affichage_executable_OBJECTS)
+affichage_executable_LDADD = $(LDADD)
+affichage_executable_DEPENDENCIES =
 am_fusion_OBJECTS = $(am__objects_1) fusion.$(OBJEXT) \
 	elf_reader.$(OBJEXT) elf_file.$(OBJEXT) \
 	affichage_elf.$(OBJEXT) elf_fusion.$(OBJEXT)
@@ -158,9 +158,9 @@ am__v_LEX_0 = @echo "  LEX     " $@;
 am__v_LEX_1 = 
 YLWRAP = $(top_srcdir)/build-aux/ylwrap
 SOURCES = $(ARM_runner_example_SOURCES) \
-	$(affichage_en_tete_elf_SOURCES) $(fusion_SOURCES)
+	$(affichage_executable_SOURCES) $(fusion_SOURCES)
 DIST_SOURCES = $(ARM_runner_example_SOURCES) \
-	$(affichage_en_tete_elf_SOURCES) $(fusion_SOURCES)
+	$(affichage_executable_SOURCES) $(fusion_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -360,8 +360,7 @@ EXTRA_DIST = filtre.pl sample_run.sh
 SIMULATOR_INTERFACE = csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
 ARM_runner_example_SOURCES = $(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
 fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c
-affichage_en_tete_elf_SOURCES = $(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
-affichage_table_sections_elf = $(COMMON) affichage_table_sections_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
+affichage_executable_SOURCES = $(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
 all: all-recursive
 
 .SUFFIXES:
@@ -446,9 +445,9 @@ ARM_runner_example$(EXEEXT): $(ARM_runner_example_OBJECTS) $(ARM_runner_example_
 	@rm -f ARM_runner_example$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ARM_runner_example_OBJECTS) $(ARM_runner_example_LDADD) $(LIBS)
 
-affichage_en_tete_elf$(EXEEXT): $(affichage_en_tete_elf_OBJECTS) $(affichage_en_tete_elf_DEPENDENCIES) $(EXTRA_affichage_en_tete_elf_DEPENDENCIES) 
-	@rm -f affichage_en_tete_elf$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(affichage_en_tete_elf_OBJECTS) $(affichage_en_tete_elf_LDADD) $(LIBS)
+affichage_executable$(EXEEXT): $(affichage_executable_OBJECTS) $(affichage_executable_DEPENDENCIES) $(EXTRA_affichage_executable_DEPENDENCIES) 
+	@rm -f affichage_executable$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(affichage_executable_OBJECTS) $(affichage_executable_LDADD) $(LIBS)
 
 fusion$(EXEEXT): $(fusion_OBJECTS) $(fusion_DEPENDENCIES) $(EXTRA_fusion_DEPENDENCIES) 
 	@rm -f fusion$(EXEEXT)
