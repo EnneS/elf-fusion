@@ -18,7 +18,7 @@ SUBDIRS+=. Examples_loader
 bin_PROGRAMS=
 bin_PROGRAMS+=ARM_runner_example
 bin_PROGRAMS+=fusion
-bin_PROGRAMS+=affichage_en_tete_elf
+bin_PROGRAMS+=affichage_executable
 
 COMMON=debug.h debug.c util.h util.c
 

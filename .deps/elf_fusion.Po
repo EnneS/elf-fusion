@@ -47,7 +47,11 @@ elf_fusion.o: elf_fusion.c /usr/include/stdc-predef.h elf_fusion.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
+<<<<<<< HEAD
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h hashtable.h
+=======
+ /usr/include/x86_64-linux-gnu/bits/string_fortified.h
+>>>>>>> 6a23f2790aef87db0889ddbb40ed66c68d8cfe28
 
 /usr/include/stdc-predef.h:
 
