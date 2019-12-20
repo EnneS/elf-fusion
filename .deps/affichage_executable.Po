@@ -55,7 +55,9 @@ affichage_executable.o: affichage_executable.c /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdio2.h /usr/include/ctype.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h elf_reader.h \
- elf_file.h util.h
+ elf_file.h util.h /usr/include/string.h /usr/include/strings.h \
+ /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
+ /usr/include/x86_64-linux-gnu/bits/string_fortified.h
 
 /usr/include/stdc-predef.h:
 
@@ -190,3 +192,11 @@ elf_reader.h:
 elf_file.h:
 
 util.h:
+
+/usr/include/string.h:
+
+/usr/include/strings.h:
+
+/usr/include/x86_64-linux-gnu/bits/strings_fortified.h:
+
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:
