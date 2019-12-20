@@ -573,7 +573,7 @@ void yyset_column ( int _column_no , yyscan_t yyscanner );
  */
 
 #ifndef YY_SKIP_YYWRAP
-#ifdef __widthusplus
+#ifdef __cplusplus
 extern "C" int yywrap ( yyscan_t yyscanner );
 #else
 extern int yywrap ( yyscan_t yyscanner );
@@ -593,7 +593,7 @@ static int yy_flex_strlen ( const char * , yyscan_t yyscanner);
 #endif
 
 #ifndef YY_NO_INPUT
-#ifdef __widthusplus
+#ifdef __cplusplus
 static int yyinput ( yyscan_t yyscanner );
 #else
 static int input ( yyscan_t yyscanner );
@@ -1161,7 +1161,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 #endif
 
 #ifndef YY_NO_INPUT
-#ifdef __widthusplus
+#ifdef __cplusplus
     static int yyinput (yyscan_t yyscanner)
 #else
     static int input  (yyscan_t yyscanner)
@@ -1213,7 +1213,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 					if ( ! yyg->yy_did_buffer_switch_on_eof )
 						YY_NEW_FILE;
-#ifdef __widthusplus
+#ifdef __cplusplus
 					return yyinput(yyscanner);
 #else
 					return input(yyscanner);

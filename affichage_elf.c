@@ -1,10 +1,6 @@
 #include "affichage_elf.h"
 #include "util.h"
 
-<<<<<<< HEAD
-void afficher_header(Elf32_Ehdr header)
-{
-=======
 char* OS_ABI[17] = {
     "System V", "HP-UX", "NetBSD", 
     "Linux", "GNU Hurd", "Solaris", 
@@ -27,7 +23,6 @@ char* SECTION_TYPE[20] = {
 };
 
 void print_elf_header(Elf32_Ehdr header) {
->>>>>>> 864bcc83a3e694dd6872ebd82fc91173eb76bae9
     printf("En tête ELF :\n");
     printf("Magique : ");
     for (int i = 0; i < 16; i++)
@@ -58,111 +53,6 @@ void print_elf_header(Elf32_Ehdr header) {
 
     printf("\n");
 
-<<<<<<< HEAD
-    printf("OS/ABI : ");
-    switch (header.e_ident[7])
-    {
-    case 0x00:
-        printf("System V");
-        break;
-    case 0x01:
-        printf("HP-UX");
-        break;
-    case 0x02:
-        printf("NetBSD");
-        break;
-    case 0x03:
-        printf("Linux");
-        break;
-    case 0x04:
-        printf("GNU Hurd");
-        break;
-    case 0x05:
-        printf("Solaris");
-        break;
-    case 0x06:
-        printf("AIX");
-        break;
-    case 0x07:
-        printf("IRIX");
-        break;
-    case 0x08:
-        printf("FreeBSD");
-        break;
-    case 0x09:
-        printf("Tru64");
-        break;
-    case 0x0a:
-        printf("Novell Modesto ");
-        break;
-    case 0x0b:
-        printf("OpenBSD");
-        break;
-    case 0x0c:
-        printf("OpenVMS");
-        break;
-    case 0x0d:
-        printf("NonStop Kernel");
-        break;
-    case 0x0e:
-        printf("AROS");
-        break;
-    case 0x0f:
-        printf("Fenix OS ");
-        break;
-    case 0x10:
-        printf("CloudABI");
-        break;
-    case 0x11:
-        printf("CloudABI");
-        break;
-    default:
-        printf("Default");
-        break;
-    }
-    printf("\n");
-
-    printf("Vesrsion ABI: 0x%x", header.e_ident[8]);
-    printf("\n");
-
-    printf("Type : ");
-    switch (reverse_2(header.e_type))
-    {
-    case 0x00:
-        printf("NONE");
-        break;
-    case 0x01:
-        printf("REL");
-        break;
-    case 0x02:
-        printf("EXEC");
-        break;
-    case 0x03:
-        printf("DYN");
-        break;
-    case 0x04:
-        printf("CORE");
-        break;
-    case 0xfe:
-        printf("LOOS");
-        break;
-    case 0xfeff:
-        printf("HIOS");
-        break;
-    case 0xff00:
-        printf("LOPORC");
-        break;
-    case 0xffff:
-        printf("HIPROC");
-        break;
-    default:
-        printf("Default");
-        break;
-    }
-    printf("\n");
-
-    printf("Machine : 0x%.2x", reverse_2(header.e_machine));
-=======
     
     printf("OS/ABI : %s\n", OS_ABI[header.e_ident[7]]);
     
@@ -180,7 +70,6 @@ void print_elf_header(Elf32_Ehdr header) {
     else if(type >= 0xff00 && type <= 0xffff){
         printf("PROC\n");
     }    
->>>>>>> 864bcc83a3e694dd6872ebd82fc91173eb76bae9
 
     printf("\n");
 
@@ -200,63 +89,6 @@ void print_elf_header(Elf32_Ehdr header) {
 
     printf("\n");
 
-<<<<<<< HEAD
-    printf("Adresse du point d'entrée: 0x%.2x", reverse_4(header.e_entry));
-    printf("\n");
-
-    printf("Début des en-têtes de programme: %d (octet dans le fichier)", reverse_4(header.e_phoff));
-    printf("\n");
-
-    printf("Début des en-têtes de sections: %d (octet dans le fichier)", reverse_4(header.e_shoff));
-    printf("\n");
-
-    printf("Fanions : 0x%x", reverse_4(header.e_flags));
-    printf("\n");
-
-    printf("Taille de cet en-tête : 52 (octet)");
-    printf("\n");
-
-    printf("Taille de l'en-tête du programme: %d (octet)", reverse_2(header.e_phentsize));
-    printf("\n");
-
-    printf("Nombre d'en-tête du programme: %d", reverse_2(header.e_phnum));
-    printf("\n");
-
-    printf("Taille des en-têtes de section: %d (octet)", reverse_2(header.e_shentsize));
-    printf("\n");
-
-    printf("Nombre d'en-têtes de section:  %d (octet)", reverse_2(header.e_shnum));
-    printf("\n");
-
-    printf("Table d'indexes des chaînes d'en-tête de section: %d", reverse_2(header.e_shstrndx));
-    printf("\n");
-}
-
-void afficher_table_sections(Elf32_Shdr sections, Elf32_Ehdr header, FILE * input)
-{   
-    uint32_t idx;
-    char *SectNames;
-    SectNames = malloc(sections.sh_size);
-
-    fseek(input, sections.sh_offset, SEEK_SET);
-    fread(SectNames, 1, sections.sh_size, input);
-
-    // read all section headers
-    for (idx = 0; idx < header.e_shnum; idx++)
-    {
-        const char *name = "";
-
-        fseek(input, header.e_shoff + idx * sizeof(sections), SEEK_SET);
-        fread(&sections, 1, sizeof(sections), input);
-
-        // print section name
-        if (sections.sh_name)
-            ;
-        name = SectNames + sections.sh_name;
-        printf("%2u %s\n", idx, name);
-    }
-}
-=======
     printf("Adresse du point d'entrée: 0x%.2x\n",reverse_4(header.e_entry));    
     printf("Début des en-têtes de programme: %d (octet dans le fichier)\n",reverse_4(header.e_phoff));    
     printf("Début des en-têtes de sections: %d (octet dans le fichier)\n",reverse_4(header.e_shoff));    
@@ -381,4 +213,3 @@ void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** secti
     }
     printf("\n");
 }
->>>>>>> 864bcc83a3e694dd6872ebd82fc91173eb76bae9
