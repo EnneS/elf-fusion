@@ -17,14 +17,6 @@ int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t 
     return 0;
 }
 
-void* read_elf_special_table(FILE* file, size_t offset, size_t size, size_t entry_size){
-    fseek(file, offset, SEEK_SET);
-    void* table = malloc(size);
-    int nb_entries = size / entry_size;
-    if(fread(table, entry_size, nb_entries, file) < nb_entries)
-        return NULL;
-    return table;
-}
 
 Elf32_data read_elf_data(FILE* file){
     Elf32_data elf_data;
@@ -36,19 +28,23 @@ Elf32_data read_elf_data(FILE* file){
 
     // Récupération des entêtes des sections
     elf_data.shdr_table = malloc(sizeof(Elf32_Shdr) * reverse_2(elf_data.e_header.e_shnum));
+    elf_data.sections_data = malloc(sizeof(uint8_t*) * reverse_2(elf_data.e_header.e_shnum));
+
     if(read_elf_section_table(file, elf_data.shdr_table, reverse_4(elf_data.e_header.e_shoff), reverse_2(elf_data.e_header.e_shnum), reverse_2(elf_data.e_header.e_shentsize))){
         fprintf(stderr, "couldn't read section table\n");
     }
 
     // Allocation mémoire des tableaux
-    size_t rela_count, rel_count;
-    rela_count = rel_count = 0;
+    size_t rela_count, rel_count, progbits_nbr;
+    rela_count = rel_count = progbits_nbr = 0;
     for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
         switch(reverse_4(elf_data.shdr_table[i].sh_type)){
             // Relocation table (with addends)
-            case 4: 
+            case SHT_PROGBITS: 
+                progbits_nbr++; break;
+            case SHT_RELA: 
                 rela_count++; break;
-            case 9:
+            case SHT_REL:
                 rel_count++; break;
         }
     }
@@ -58,40 +54,62 @@ Elf32_data read_elf_data(FILE* file){
     elf_data.rel_tables_size = rel_count;
     elf_data.rel_tables = malloc(rel_count * sizeof(Elf32_Rel*));
 
+    elf_data.progbits_nbr = progbits_nbr;
+    elf_data.progbits_sections = malloc(progbits_nbr * sizeof(uint8_t*));
+
     // Récupération des sections
-    size_t rela_index, rel_index;
-    rela_index = rel_index = 0;
+    size_t rela_index, rel_index, str_index, progbits_index;
+    rela_index = rel_index = progbits_index = 0;
+    str_index = reverse_2(elf_data.e_header.e_shstrndx);
+    Elf32_Word symbol_table_link = -1;
     for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
         size_t sh_offset = reverse_4(elf_data.shdr_table[i].sh_offset);
         size_t sh_size = reverse_4(elf_data.shdr_table[i].sh_size);
-        size_t sh_entsize = reverse_4(elf_data.shdr_table[i].sh_entsize);
+        size_t sh_type = reverse_4(elf_data.shdr_table[i].sh_type);
 
-        switch(reverse_4(elf_data.shdr_table[i].sh_type)){
-            // Symbole Table
-            case 2:
-                elf_data.symbol_table = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);
-                if(!elf_data.symbol_table){
-                    fprintf(stderr, "couldn't read symbole table\n");
-                }
+        if(sh_size == 0)
+            continue;
+        
+        elf_data.sections_data[i] = malloc(sh_size);
+        fseek(file, sh_offset, SEEK_SET);
+        if(fread(elf_data.sections_data[i], sh_size, 1, file) < 1){
+            fprintf(stderr, "couldn't read section data\n");
+        }       
+
+        // String Table
+        if(i == str_index){
+            elf_data.str_table = (char*) elf_data.sections_data[i];
+            elf_data.str_table_size = sh_size;
+        }
+
+        switch(sh_type){
+            case SHT_PROGBITS:
+                elf_data.progbits_sections[progbits_index] = elf_data.sections_data[i];
+                progbits_index++;
+                break;
+            // Symbol Table
+            case SHT_SYMTAB:
+                elf_data.symbol_table = (Elf32_Sym*) elf_data.sections_data[i];
+                elf_data.symbol_table_size = sh_size / sizeof(Elf32_Sym);
+                symbol_table_link = elf_data.shdr_table[i].sh_link;
                 break;
 
             // Relocation Table (with addends)
-            case 4:
-                elf_data.rela_tables[rela_index] = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);
-                if(!elf_data.symbol_table){
-                    fprintf(stderr, "couldn't read relocation table (with addends)\n");
-                }
-                break;
+            case SHT_RELA:
+                elf_data.rela_tables[rela_index] = (Elf32_Rela*) elf_data.sections_data[i];
                 rela_index++;
+                break;
                 
             // Relocation Table (without addends)
-            case 9:
-                elf_data.rel_tables[rel_index] = read_elf_special_table(file, sh_offset, sh_size, sh_entsize);
-                if(!elf_data.symbol_table){
-                    fprintf(stderr, "couldn't read relocation table (without addends)\n");
-                }
-                break;
+            case SHT_REL:
+                elf_data.rel_tables[rel_index] = (Elf32_Rel*) elf_data.sections_data[i];
                 rel_index++;
+                break;
+        }
+
+        if(reverse_4(symbol_table_link) == i) {
+            elf_data.sm_str_table = (char*) elf_data.sections_data[i];
+            elf_data.sm_str_table_size = sh_size;
         }
     }
     return elf_data;
@@ -99,15 +117,10 @@ Elf32_data read_elf_data(FILE* file){
 
 void free_elf_data(Elf32_data elf){
     free(elf.shdr_table);
-    free(elf.symbol_table);
 
-    for(int i = 0; i < elf.rela_tables_size; i++){
-        free(elf.rela_tables[i]);
+    for(int i = 0; i < reverse_2(elf.e_header.e_shnum); i++){
+        free(elf.sections_data[i]);
     }
-    free(elf.rela_tables);
-
-    for(int i = 0; i < elf.rel_tables_size; i++){
-        free(elf.rel_tables[i]);
-    }
-    free(elf.rel_tables);
+    free(elf.sections_data);
 }
+
