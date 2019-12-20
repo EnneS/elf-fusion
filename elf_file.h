@@ -17,6 +17,10 @@ typedef struct{
     size_t str_table_size;
 
     Elf32_Sym* symbol_table;
+    size_t symbol_table_size;
+
+    char* sm_str_table;
+    size_t sm_str_table_size;
 
     Elf32_Rela** rela_tables;
     size_t rela_tables_size;

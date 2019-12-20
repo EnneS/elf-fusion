@@ -61,6 +61,7 @@ Elf32_data read_elf_data(FILE* file){
     size_t rela_index, rel_index, str_index, progbits_index;
     rela_index = rel_index = progbits_index = 0;
     str_index = reverse_2(elf_data.e_header.e_shstrndx);
+    Elf32_Word symbol_table_link = -1;
     for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
         size_t sh_offset = reverse_4(elf_data.shdr_table[i].sh_offset);
         size_t sh_size = reverse_4(elf_data.shdr_table[i].sh_size);
@@ -74,7 +75,6 @@ Elf32_data read_elf_data(FILE* file){
         if(fread(elf_data.sections_data[i], sh_size, 1, file) < 1){
             fprintf(stderr, "couldn't read section data\n");
         }       
-        
 
         // String Table
         if(i == str_index){
@@ -90,6 +90,8 @@ Elf32_data read_elf_data(FILE* file){
             // Symbol Table
             case SHT_SYMTAB:
                 elf_data.symbol_table = (Elf32_Sym*) elf_data.sections_data[i];
+                elf_data.symbol_table_size = sh_size / sizeof(Elf32_Sym);
+                symbol_table_link = elf_data.shdr_table[i].sh_link;
                 break;
 
             // Relocation Table (with addends)
@@ -103,6 +105,11 @@ Elf32_data read_elf_data(FILE* file){
                 elf_data.rel_tables[rel_index] = (Elf32_Rel*) elf_data.sections_data[i];
                 rel_index++;
                 break;
+        }
+
+        if(reverse_4(symbol_table_link) == i) {
+            elf_data.sm_str_table = (char*) elf_data.sections_data[i];
+            elf_data.sm_str_table_size = sh_size;
         }
     }
     return elf_data;

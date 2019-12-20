@@ -9,9 +9,11 @@ int main(int argc, char ** argv) {
         printf("Erreur lors de l'ouverture du fichier\n");
         exit(1);
     }
-    if(read_elf_header(input, &header)){
+
+    if( read_elf_header(input, &header) ){
         fprintf(stderr, "couldn't recognize elf header\n");
     }
+    
     fclose(input);
     return 0;
 }

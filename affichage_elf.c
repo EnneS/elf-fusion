@@ -22,6 +22,30 @@ char* SECTION_TYPE[20] = {
     "SYMTAB_SHNDX", "NUM" 
 };
 
+char * SYMBOL_TYPE[13] = {
+    "NOTYPE","OBJECT","FUNC",
+    "SECTION","FILE","COMMON",
+    "TLS","NUM","LOOS",
+    "GNU_IFUNC","HIOS","LOPROC",
+    "HIPROC"
+};
+
+char * SYMBOL_LIEN[21] = {
+    "LOCAL","GLOBAL","WEAK",
+    "NUM"," "," ",
+    " "," "," ",
+    " "," ","LOOS"," "
+    "HIOS","LOPROC"," ",
+    "HIPROC"
+};
+
+char * SYMBOL_VISIBILITY[4] = {
+    "DEFAULT ","INTERNAL","HIDDEN",
+    "PROTECTED"
+};
+
+
+
 void print_elf_header(Elf32_Ehdr header) {
     printf("En tête ELF :\n");
     printf("Magique : ");
@@ -212,4 +236,45 @@ void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** secti
         printf("Section '%s' n'a pas de donnée à dump.", section_name);
     }
     printf("\n");
+}
+
+void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
+    printf("La table de symboles « .symtab » contient %ld entrées :\n",size);
+    printf("   Num:    Valeur Tail Type    Lien   Vis      Ndx Nom\n");
+    Elf32_Sym symbol;
+    
+    for(int i = 0; i < size; i++)  {
+        
+        symbol = symbols[i];
+
+        printf("%6d:",i);
+        printf("%10.8x",symbol.st_value);
+        printf("%5d ",reverse_2(symbol.st_size));
+        int idx_type = ELF32_ST_TYPE(symbol.st_info);
+        switch(idx_type) {
+            case 0x10:
+                idx_type = 8;
+                break;
+            case 0x12 :
+                idx_type = 9;
+                break;
+            case 0x13:
+                idx_type = 10;
+                break;
+            case 0x15:
+                idx_type = 11;
+                break;
+            default:
+                break;
+        }
+        printf("%-8s",SYMBOL_TYPE[idx_type]);
+        printf("%-7s",SYMBOL_LIEN[ELF32_ST_BIND(symbol.st_info)]);
+        printf("%-8s",SYMBOL_VISIBILITY[ELF32_ST_VISIBILITY(symbol.st_other)]);
+
+        int ndx = reverse_2(symbol.st_shndx);
+        ndx == 0 ? printf("%4s", "UND") : printf("%4d", ndx);
+        printf("%5s",&sm_str_table[reverse_4(symbol.st_name)]);
+        printf("\n");
+
+    }
 }

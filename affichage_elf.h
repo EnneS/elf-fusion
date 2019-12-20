@@ -11,5 +11,6 @@
 void print_elf_header(Elf32_Ehdr header);
 void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, size_t nb_sections, char* str_table);
 void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** sections_data, size_t num);
+void print_symbol_table(Elf32_Sym * symbol, size_t taille, char* sm_str_table);
 
 #endif
