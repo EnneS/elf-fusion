@@ -81,7 +81,7 @@ void print_elf_header(Elf32_Ehdr header) {
     printf("Vesrsion ABI: 0x%x\n",header.e_ident[8]);    
     
     printf("Type : ");
-    int type = reverse_2(header.e_type);
+    int type = header.e_type;
     (void)type;
     if(type <= 4){
         printf("%s\n", HEADER_TYPE[type]);
@@ -96,7 +96,7 @@ void print_elf_header(Elf32_Ehdr header) {
     printf("\n");
 
     printf("Version : ");
-    switch (reverse_4(header.e_version))
+    switch (header.e_version)
     {
     case 0:
         printf("autre que l'original");
@@ -111,16 +111,16 @@ void print_elf_header(Elf32_Ehdr header) {
 
     printf("\n");
 
-    printf("Adresse du point d'entrée: 0x%.2x\n",reverse_4(header.e_entry));    
-    printf("Début des en-têtes de programme: %d (octet dans le fichier)\n",reverse_4(header.e_phoff));    
-    printf("Début des en-têtes de sections: %d (octet dans le fichier)\n",reverse_4(header.e_shoff));    
-    printf("Fanions : 0x%x\n",reverse_4(header.e_flags));    
+    printf("Adresse du point d'entrée: 0x%.2x\n",header.e_entry);    
+    printf("Début des en-têtes de programme: %d (octet dans le fichier)\n",header.e_phoff);    
+    printf("Début des en-têtes de sections: %d (octet dans le fichier)\n",header.e_shoff);    
+    printf("Fanions : 0x%x\n",header.e_flags);    
     printf("Taille de cet en-tête : 52 (octet)\n");    
-    printf("Taille de l'en-tête du programme: %d (octet)\n",reverse_2(header.e_phentsize));    
-    printf("Nombre d'en-tête du programme: %d\n",reverse_2(header.e_phnum));    
-    printf("Taille des en-têtes de section: %d (octet)\n",reverse_2(header.e_shentsize));    
-    printf("Nombre d'en-têtes de section:  %d (octet)\n",reverse_2(header.e_shnum));    
-    printf("Table d'indexes des chaînes d'en-tête de section: %d\n",reverse_2(header.e_shstrndx));    
+    printf("Taille de l'en-tête du programme: %d (octet)\n",header.e_phentsize);    
+    printf("Nombre d'en-tête du programme: %d\n",header.e_phnum);    
+    printf("Taille des en-têtes de section: %d (octet)\n",header.e_shentsize);    
+    printf("Nombre d'en-têtes de section:  %d (octet)\n",header.e_shnum);    
+    printf("Table d'indexes des chaînes d'en-tête de section: %d\n",header.e_shstrndx);    
 }
 
 void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, size_t nb_sections, char* str_table){
@@ -132,10 +132,10 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
         printf("  [%2d]", i);
 
         //NOM
-        printf(" %-18s", &str_table[reverse_4(shdr_table[i].sh_name)]);
+        printf(" %-18s", &str_table[shdr_table[i].sh_name]);
 
         //TYPE
-        int type = reverse_4(shdr_table[i].sh_type);
+        int type = shdr_table[i].sh_type;
         if(type < 12){
             printf(" %-12s", SECTION_TYPE[type]);
         }
@@ -152,21 +152,21 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
         }
         
         // ADDR
-        printf(" %8.8x", reverse_4(shdr_table[i].sh_addr));
+        printf(" %8.8x", shdr_table[i].sh_addr);
 
         // OFFSET
-        printf(" %6.6x", reverse_4(shdr_table[i].sh_offset));
+        printf(" %6.6x", shdr_table[i].sh_offset);
 
         // TAILLE
-        printf(" %6.6x", reverse_4(shdr_table[i].sh_size));
+        printf(" %6.6x", shdr_table[i].sh_size);
 
         // TAILLE D'UNE ENTREE
-        printf(" %2.2x", reverse_4(shdr_table[i].sh_entsize));
+        printf(" %2.2x", shdr_table[i].sh_entsize);
 
         // FLAGS
         char flags[4] = "\0\0\0";
         int flag_count = 0;
-        int flag = reverse_4(shdr_table[i].sh_flags);
+        int flag = shdr_table[i].sh_flags;
         if(flag & SHF_WRITE) {flags[flag_count] = 'W'; flag_count++;}
         if(flag & SHF_ALLOC) {flags[flag_count] = 'A'; flag_count++;} 
         if(flag & SHF_EXECINSTR) {flags[flag_count] = 'X'; flag_count++;}
@@ -183,13 +183,13 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
         printf(" %3s", flags);
 
         // LINK
-        printf(" %2d", reverse_4(shdr_table[i].sh_link));
+        printf(" %2d", shdr_table[i].sh_link);
 
         // INFO
-        printf(" %3d", reverse_4(shdr_table[i].sh_info));
+        printf(" %3d", shdr_table[i].sh_info);
 
         // ADDR ALIGN
-        printf(" %2d", reverse_4(shdr_table[i].sh_addralign));
+        printf(" %2d", shdr_table[i].sh_addralign);
 
         printf("\n");
     }
@@ -198,8 +198,8 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
 
 void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** sections_data, size_t num){
     uint8_t* section_data = sections_data[num];
-    size_t size = reverse_4(shdr_table[num].sh_size);
-    char* section_name = &str_table[reverse_4(shdr_table[num].sh_name)];
+    size_t size = shdr_table[num].sh_size;
+    char* section_name = &str_table[shdr_table[num].sh_name];
     if(size > 0) {
         int width = 4;
         int height = size/(4*width);
@@ -247,7 +247,7 @@ void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
 
         printf("%6d:",i);
         printf("%10.8x",symbol.st_value);
-        printf("%5d ",reverse_2(symbol.st_size));
+        printf("%5d ",symbol.st_size);
         int idx_type = ELF32_ST_TYPE(symbol.st_info);
         switch(idx_type) {
             case 0x10:
@@ -269,9 +269,9 @@ void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
         printf("%-7s",SYMBOL_LIEN[ELF32_ST_BIND(symbol.st_info)]);
         printf("%-8s",SYMBOL_VISIBILITY[ELF32_ST_VISIBILITY(symbol.st_other)]);
 
-        int ndx = reverse_2(symbol.st_shndx);
+        int ndx = symbol.st_shndx;
         ndx == 0 ? printf("%4s", "UND") : printf("%4d", ndx);
-        printf("%5s",&sm_str_table[reverse_4(symbol.st_name)]);
+        printf("%5s",&sm_str_table[symbol.st_name]);
         printf("\n");
 
     }
@@ -280,20 +280,20 @@ void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
 void print_relocation_table(Elf32_RelTable* rel_tables, size_t rel_tables_size, Elf32_RelaTable* rela_tables, size_t rela_tables_size, char* str_table, Elf32_Sym* symbole_table, Elf32_Shdr* shdr_table){
     for(int i = 0; i < rel_tables_size; i++){
         Elf32_RelTable rel_table = rel_tables[i];
-        Elf32_Off offset = reverse_4(rel_table.rel_table_offset);
+        Elf32_Off offset = rel_table.rel_table_offset;
         size_t nb_entries = rel_table.rel_table_size;
-        printf("Section de réadressage '%s' à l'adresse de décalage 0x%x contient %ld entrées:\n", &str_table[reverse_4(rel_table.rel_table_name)], offset, nb_entries);
+        printf("Section de réadressage '%s' à l'adresse de décalage 0x%x contient %ld entrées:\n", &str_table[rel_table.rel_table_name], offset, nb_entries);
         printf(" Décalage   Info   Type  Val.-sym  Noms-symboles\n");
         for(int j = 0; j < rel_table.rel_table_size; j++){
             Elf32_Rel rel = rel_table.rel_table[j];
-            printf("%-10.8x", reverse_4(rel.r_offset));
-            printf("%-9.8x", reverse_4(rel.r_info));
-            int type = ELF32_R_TYPE(reverse_4(rel.r_info));
+            printf("%-10.8x", rel.r_offset);
+            printf("%-9.8x", rel.r_info);
+            int type = ELF32_R_TYPE(rel.r_info);
             printf("%4d ", type);
-            int symbol = ELF32_R_SYM(reverse_4(rel.r_info));
+            int symbol = ELF32_R_SYM(rel.r_info);
             printf("%9.8x ", symbol);
-            int section_index = reverse_2(symbole_table[symbol].st_shndx);
-            printf("%14s", &str_table[reverse_4(shdr_table[section_index].sh_name)]);
+            int section_index = symbole_table[symbol].st_shndx;
+            printf("%14s", &str_table[shdr_table[section_index].sh_name]);
             printf("\n");
         }
         printf("\n");
@@ -301,20 +301,20 @@ void print_relocation_table(Elf32_RelTable* rel_tables, size_t rel_tables_size, 
 
     for(int i = 0; i < rela_tables_size; i++){
         Elf32_RelaTable rela_table = rela_tables[i];
-        Elf32_Off offset = reverse_4(rela_table.rela_table_offset);
+        Elf32_Off offset = rela_table.rela_table_offset;
         size_t nb_entries = rela_table.rela_table_size;
-        printf("Section de réadressage '%s' à l'adresse de décalage 0x%x contient %ld entrées:\n", &str_table[reverse_4(rela_table.rela_table_name)], offset, nb_entries);
+        printf("Section de réadressage '%s' à l'adresse de décalage 0x%x contient %ld entrées:\n", &str_table[rela_table.rela_table_name], offset, nb_entries);
         printf(" Décalage   Info   Type  Val.-sym  Noms-symboles\n");
         for(int j = 0; j < rela_table.rela_table_size; j++){
             Elf32_Rela rela = rela_table.rela_table[j];
-            printf("%-10.8x", reverse_4(rela.r_offset));
-            printf("%-9.8x", reverse_4(rela.r_info));
-            int type = ELF32_R_TYPE(reverse_4(rela.r_info));
+            printf("%-10.8x", rela.r_offset);
+            printf("%-9.8x", rela.r_info);
+            int type = ELF32_R_TYPE(rela.r_info);
             printf("%4d ", type);
-            int symbol = ELF32_R_SYM(reverse_4(rela.r_info));
+            int symbol = ELF32_R_SYM(rela.r_info);
             printf("%-8.8x", symbol);
-            int section_index = reverse_2(symbole_table[symbol].st_shndx);
-            printf("%-12s", &str_table[reverse_4(shdr_table[section_index].sh_name)]);
+            int section_index = symbole_table[symbol].st_shndx;
+            printf("%-12s", &str_table[shdr_table[section_index].sh_name]);
             printf("\n");
         }
     }

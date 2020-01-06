@@ -111,25 +111,17 @@ am_ARM_runner_example_OBJECTS = $(am__objects_1) $(am__objects_2) \
 ARM_runner_example_OBJECTS = $(am_ARM_runner_example_OBJECTS)
 ARM_runner_example_LDADD = $(LDADD)
 ARM_runner_example_DEPENDENCIES =
-<<<<<<< HEAD
-am_affichage_en_tete_elf_OBJECTS = $(am__objects_1) \
-	affichage_en_tete_elf.$(OBJEXT) affichage_elf.$(OBJEXT) \
-	elf_reader.$(OBJEXT) hashtable.$(OBJEXT) elf_file.$(OBJEXT)
-affichage_en_tete_elf_OBJECTS = $(am_affichage_en_tete_elf_OBJECTS)
-affichage_en_tete_elf_LDADD = $(LDADD)
-affichage_en_tete_elf_DEPENDENCIES =
-=======
 am_affichage_executable_OBJECTS = $(am__objects_1) \
 	affichage_executable.$(OBJEXT) affichage_elf.$(OBJEXT) \
-	elf_reader.$(OBJEXT)
+	elf_reader.$(OBJEXT) hashtable.$(OBJEXT) elf_file.$(OBJEXT) \
+	elf_file_reverse.$(OBJEXT)
 affichage_executable_OBJECTS = $(am_affichage_executable_OBJECTS)
 affichage_executable_LDADD = $(LDADD)
 affichage_executable_DEPENDENCIES =
->>>>>>> 6a23f2790aef87db0889ddbb40ed66c68d8cfe28
 am_fusion_OBJECTS = $(am__objects_1) fusion.$(OBJEXT) \
 	elf_reader.$(OBJEXT) elf_file.$(OBJEXT) \
 	affichage_elf.$(OBJEXT) elf_fusion.$(OBJEXT) \
-	hashtable.$(OBJEXT)
+	hashtable.$(OBJEXT) elf_file_reverse.$(OBJEXT)
 fusion_OBJECTS = $(am_fusion_OBJECTS)
 fusion_LDADD = $(LDADD)
 fusion_DEPENDENCIES =
@@ -263,12 +255,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/s/souliena/Projets/elf-fusion/build-aux/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing automake-1.15
+AUTOCONF = ${SHELL} /home/s/souliena/Projets/elf-fusion/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/s/souliena/Projets/elf-fusion/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/s/souliena/Projets/elf-fusion/build-aux/missing automake-1.15
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -297,7 +289,7 @@ LEX_OUTPUT_ROOT = lex.yy
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/r/royetju/elf-fusion/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/s/souliena/Projets/elf-fusion/build-aux/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = elf_linker
@@ -312,10 +304,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 1.0
-abs_builddir = /home/r/royetju/elf-fusion
-abs_srcdir = /home/r/royetju/elf-fusion
-abs_top_builddir = /home/r/royetju/elf-fusion
-abs_top_srcdir = /home/r/royetju/elf-fusion
+abs_builddir = /home/s/souliena/Projets/elf-fusion
+abs_srcdir = /home/s/souliena/Projets/elf-fusion
+abs_top_builddir = /home/s/souliena/Projets/elf-fusion
+abs_top_srcdir = /home/s/souliena/Projets/elf-fusion
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -334,7 +326,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/r/royetju/elf-fusion/build-aux/install-sh
+install_sh = ${SHELL} /home/s/souliena/Projets/elf-fusion/build-aux/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -369,14 +361,8 @@ COMMON = debug.h debug.c util.h util.c
 EXTRA_DIST = filtre.pl sample_run.sh
 SIMULATOR_INTERFACE = csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
 ARM_runner_example_SOURCES = $(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
-<<<<<<< HEAD
-fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c hashtable.h hashtable.c
-affichage_en_tete_elf_SOURCES = $(COMMON) affichage_en_tete_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h hashtable.h hashtable.c elf_file.h elf_file.c
-affichage_table_sections_elf = $(COMMON) affichage_table_sections_elf.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h hashtable.h hashtable.c elf_file.h elf_file.c
-=======
-fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c
-affichage_executable_SOURCES = $(COMMON) affichage_executable.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h
->>>>>>> 6a23f2790aef87db0889ddbb40ed66c68d8cfe28
+fusion_SOURCES = $(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c hashtable.h hashtable.c elf_file_reverse.h elf_file_reverse.c
+affichage_executable_SOURCES = $(COMMON) affichage_executable.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h hashtable.h hashtable.c elf_file.h elf_file.c elf_file_reverse.h elf_file_reverse.c
 all: all-recursive
 
 .SUFFIXES:
@@ -482,6 +468,7 @@ include ./$(DEPDIR)/arm_simulator_interface.Po
 include ./$(DEPDIR)/csapp.Po
 include ./$(DEPDIR)/debug.Po
 include ./$(DEPDIR)/elf_file.Po
+include ./$(DEPDIR)/elf_file_reverse.Po
 include ./$(DEPDIR)/elf_fusion.Po
 include ./$(DEPDIR)/elf_reader.Po
 include ./$(DEPDIR)/fusion.Po

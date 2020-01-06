@@ -7,6 +7,7 @@
 #include "stdlib.h"
 #include "util.h"
 #include "hashtable.h"
+#include "elf_file_reverse.h"
 
 int read_elf_header(FILE* file, Elf32_Ehdr* header);
 int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t nb_entries, size_t entry_size);
