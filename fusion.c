@@ -23,13 +23,13 @@ int main(int argc, char *argv[]){
 
     elf1_data = read_elf_data(elf1);
 
-    //print_elf_header(elf1_data.e_header);
-    print_section_header_table(elf1_data.shdr_table, elf1_data.e_header.e_shoff, elf1_data.e_header.e_shnum, elf1_data.str_table);
+    print_elf_header(elf1_data);
+    print_section_header_table(elf1_data);
 
-    print_symbol_table(elf1_data.symbol_table, elf1_data.symbol_table_size, elf1_data.sm_str_table);
+    print_symbol_table(elf1_data);
 
-    //print_section_data(elf1_data.shdr_table, elf1_data.str_table, elf1_data.sections_data, 6);
-    print_relocation_table(elf1_data.rel_tables, elf1_data.rel_tables_size, elf1_data.rela_tables, elf1_data.rela_tables_size, elf1_data.str_table, elf1_data.symbol_table, elf1_data.shdr_table);
+    print_section_data(elf1_data, 6);
+    print_relocation_table(elf1_data);
     free_elf_data(elf1_data);
 
     fclose(elf1);

@@ -9,10 +9,17 @@
 #include "hashtable.h"
 #include "elf_file_reverse.h"
 
-int read_elf_header(FILE* file, Elf32_Ehdr* header);
-int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t nb_entries, size_t entry_size);
-void* read_elf_special_table(FILE* file, uint8_t* table, size_t offset, size_t size, size_t entry_size);
+/* Lecture d'un fichier ELF */
 
+// Lecture de l'en-tête d'un fichier ELF
+int read_elf_header(FILE* file, Elf32_Ehdr* header);
+
+// Lecture de l'en-tête des sections
+int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t nb_entries, size_t entry_size);
+
+// Lecture d'un fichier ELF
 Elf32_data read_elf_data(FILE* file);
+
+// Libération la mémoire d'une structure Elf32_data
 void free_elf_data(Elf32_data elf);
 #endif

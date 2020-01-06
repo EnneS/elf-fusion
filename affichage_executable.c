@@ -43,19 +43,19 @@ int main(int argc, char ** argv) {
     if( 0 == strcmp(argv[1],"-r") ) {
         printf("relocation table");
     } else if ( 0 == strcmp(argv[1],"-s") ) {
-        print_symbol_table(elf_data.symbol_table, elf_data.symbol_table_size, elf_data.sm_str_table);
+        print_symbol_table(elf_data);
     } else if( 0 == strcmp(argv[1],"-S") ) {
-        print_section_header_table(elf_data.shdr_table, reverse_4(elf_data.e_header.e_shoff), reverse_2(elf_data.e_header.e_shnum), elf_data.str_table);
+        print_section_header_table(elf_data);
     } else if( 0 == strcmp(argv[1],"-x") ) {   
         if (argc < 4)  {
             usage();
             exit(1);
         }  
-        if( atoi(argv[3]) >= reverse_2(elf_data.e_header.e_shnum) )  {
-            printf("Erreur nombre de section = %d\n",reverse_2(elf_data.e_header.e_shnum));
+        if( atoi(argv[3]) >= elf_data.e_header.e_shnum )  {
+            printf("Erreur nombre de section = %d\n",elf_data.e_header.e_shnum);
             exit(1);
         }
-        print_section_data(elf_data.shdr_table, elf_data.str_table, elf_data.sections_data, atoi(argv[3]));
+        print_section_data(elf_data, atoi(argv[3]));
     }
     fclose(elf);
     return 0;

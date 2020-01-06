@@ -10,6 +10,8 @@ int read_elf_header(FILE* file, Elf32_Ehdr* header){
     return 0;
 }
 
+// Récupération des données d'une section à un offset donnée
+// Gère aussi s'il s'agit de plusieurs entrées
 int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t nb_entries, size_t entry_size){
     fseek(file, offset, SEEK_SET);
     if(fread(table, entry_size, nb_entries, file) < nb_entries)
@@ -57,7 +59,7 @@ Elf32_data read_elf_data(FILE* file){
     elf_data.progbits_nbr = progbits_nbr;
     elf_data.progbits_sections = malloc(progbits_nbr * sizeof(uint8_t*));
 
-//    hash_init(&elf_data.sections_table, 32);
+    hash_init(&elf_data.sections_table, 32);
 
     // Récupération des sections
     size_t rela_index, rel_index, str_index, progbits_index;
@@ -74,11 +76,17 @@ Elf32_data read_elf_data(FILE* file){
         if(sh_size == 0)
             continue;
         
+        // Récupération des données de la section dans le tableau
+        // On les récupères toutes => cela permet de ne devoir lire le fichier qu'une seule fois et de l'avoir en mémoire en permanence
+        // De cette manière il est facile d'accéder aux données d'une section si on connait son index.
         elf_data.sections_data[i] = malloc(sh_size);
         fseek(file, sh_offset, SEEK_SET);
         if(fread(elf_data.sections_data[i], sh_size, 1, file) < 1){
             fprintf(stderr, "couldn't read section data\n");
         }       
+
+        // Ensuite, il suffit d'assigner les pointeurs de chaque section au type voulu 
+        // (en castant le pointeur au bon type)
 
         // String Table
         if(i == str_index){
@@ -117,15 +125,17 @@ Elf32_data read_elf_data(FILE* file){
                 break;
         }
 
+        // String Symbol Table
         if(reverse_4(symbol_table_link) == i) {
             elf_data.sm_str_table = (char*) elf_data.sections_data[i];
             elf_data.sm_str_table_size = sh_size;
         }
     }
     for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
-     //   hash_insert(&elf_data.sections_table, get_name(&elf_data, i), i);
+        hash_insert(&elf_data.sections_table, get_name(&elf_data, i), i);
     }
 
+    // Enfin, reverse les données
     reverse_elf_data(&elf_data);
     return elf_data;
 }

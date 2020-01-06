@@ -1,13 +1,20 @@
 #include "elf_file_reverse.h"
 
+// Reverse de Elf32_data
 void reverse_elf_data(Elf32_data* elf_data){
-    reverse_elf_ehdr(&elf_data->e_header);
+    reverse_elf_ehdr(&elf_data->e_header); // Reverse l'en-tête ELF
+
+    // Reverse les en-têtes des sections
     for(int i = 0; i < elf_data->e_header.e_shnum; i++){
         reverse_elf_shdr(&elf_data->shdr_table[i]);
     }
+
+    // Reverse chaque symbole dans la table des symboles
     for(int i = 0; i < elf_data->symbol_table_size; i++){
         reverse_elf_sym(&elf_data->symbol_table[i]);
     }
+
+    // Reverse les relocations tables (avec et sans addends)
     for(int i = 0; i < elf_data->rela_tables_size; i++){
         Elf32_RelaTable* rt = &elf_data->rela_tables[i];
         rt->rela_table_name = reverse_4(rt->rela_table_name);
@@ -26,7 +33,7 @@ void reverse_elf_data(Elf32_data* elf_data){
     }
 }
 
-
+// Reverse de Elf32_Ehdr
 void reverse_elf_ehdr(Elf32_Ehdr* elf_hdr){
     elf_hdr->e_type = reverse_2(elf_hdr->e_type);
     elf_hdr->e_machine = reverse_2(elf_hdr->e_machine);
@@ -43,6 +50,7 @@ void reverse_elf_ehdr(Elf32_Ehdr* elf_hdr){
     elf_hdr->e_shstrndx = reverse_2(elf_hdr->e_shstrndx);
 }
 
+// Reverse de Elf32_Shdr
 void reverse_elf_shdr(Elf32_Shdr* elf_shdr){
     elf_shdr->sh_name = reverse_4(elf_shdr->sh_name);
     elf_shdr->sh_type = reverse_4(elf_shdr->sh_type);
@@ -56,6 +64,7 @@ void reverse_elf_shdr(Elf32_Shdr* elf_shdr){
     elf_shdr->sh_entsize = reverse_4(elf_shdr->sh_entsize);
 }
 
+// Reverse de Elf32_Sym
 void reverse_elf_sym(Elf32_Sym* elf_sym){
     elf_sym->st_name = reverse_4(elf_sym->st_name);
     elf_sym->st_value = reverse_4(elf_sym->st_value);
@@ -63,11 +72,13 @@ void reverse_elf_sym(Elf32_Sym* elf_sym){
     elf_sym->st_shndx = reverse_2(elf_sym->st_shndx);
 }
 
+// Reverse de Elf32_Rel
 void reverse_elf_rel(Elf32_Rel* elf_rel){
     elf_rel->r_offset = reverse_4(elf_rel->r_offset);
     elf_rel->r_info = reverse_4(elf_rel->r_info);
 }
 
+// Reverse de Elf32_Rela
 void reverse_elf_rela(Elf32_Rela* elf_rela){
     elf_rela->r_offset = reverse_4(elf_rela->r_offset);
     elf_rela->r_info = reverse_4(elf_rela->r_info);

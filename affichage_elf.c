@@ -44,7 +44,8 @@ char * SYMBOL_VISIBILITY[4] = {
     "PROTECTED"
 };
 
-void print_elf_header(Elf32_Ehdr header) {
+void print_elf_header(Elf32_data elf){
+    Elf32_Ehdr header = elf.e_header;
     printf("En tête ELF :\n");
     printf("Magique : ");
     for (int i = 0; i < 16; i++)
@@ -123,7 +124,11 @@ void print_elf_header(Elf32_Ehdr header) {
     printf("Table d'indexes des chaînes d'en-tête de section: %d\n",header.e_shstrndx);    
 }
 
-void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, size_t nb_sections, char* str_table){
+void print_section_header_table(Elf32_data elf){
+    Elf32_Shdr* shdr_table = elf.shdr_table;
+    size_t offset_sections = elf.e_header.e_shoff;
+    size_t nb_sections = elf.e_header.e_shnum;
+    char* str_table = elf.str_table;
     printf("Il y a %ld en-tête de sections, commençant au décalage 0x%lx\n\n", nb_sections, offset_sections);
     printf("En-têtes de section:\n");
     printf("  [No] Nom                Type         Addr     Deca   Taille ES Flg Ln Inf Al\n");
@@ -196,20 +201,27 @@ void print_section_header_table(Elf32_Shdr* shdr_table, size_t offset_sections, 
     printf("Key to Flags:\n\tW (write), A (alloc), X (execute), M (merge), S (strings), I (info),\n\tL (link order), O (extra OS processing required), G (group), T (TLS), \n\tC (compressed), x (unknown), o (OS specific), E (exclude),\n\ty (purecode), p (processor specific)\n");
 }
 
-void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** sections_data, size_t num){
-    uint8_t* section_data = sections_data[num];
+void print_section_data(Elf32_data elf, size_t num){
+    Elf32_Shdr* shdr_table = elf.shdr_table;
+    char* str_table = elf.str_table;
+    uint8_t* section_data = elf.sections_data[num];
     size_t size = shdr_table[num].sh_size;
     char* section_name = &str_table[shdr_table[num].sh_name];
+    // Si la section contient des données, l'afficher
     if(size > 0) {
         int width = 4;
         int height = size/(4*width);
         int line_length = (size*2) % (width*8);
+        // Pour aligner l'affichage (nombre d'espaces nécessaire dernières lignes entre HEXA et ASCII)
         int width_to_complete = width*8 + width - line_length - line_length/8;
+
         printf("Dump hexadécimal de la section '%s':\n", section_name);
+        // Affichage ligne par ligne en HEXA et ASCII
         for(int i = 0; i <= height; i+=1){
-            // HEXA
+            // Affichage en HEXA :
             printf("  0x%.8x ", i*16);
             for(int j = 0; (j < width*4) & ((i*width*4)+j < size); j+=4){
+                // On affiche octet par octet par 4 (blocs de 4 octets)
                 if((i*width*4)+j < size)
                     printf("%.2x",section_data[(i*width*4)+j]);
                 if((i*width*4)+j+1 < size)         
@@ -219,14 +231,16 @@ void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** secti
                 if((i*width*4)+j+3 < size)
                     printf("%.2x ",section_data[(i*width*4)+(j+3)]);
             }
+            // Alignement
             if(i == size/(4*width))
                 printf("%*s", width_to_complete, "");
-            // ASCI
+            // Affichage en ASCII
             for(int j = 0; (j < width*4) & ((i*width*4)+j < size); j++){
+                // Affichage de l'octet en charactère (s'il s'agit de caractère affichable)
                 if(isprint(section_data[(i*width*4)+j]))
                     printf("%c", section_data[(i*width*4)+j]);
                 else
-                    printf(".");
+                    printf("."); // Sinon afficher un '.' à la place
             }
             printf("\n");
         }
@@ -236,18 +250,21 @@ void print_section_data(Elf32_Shdr* shdr_table, char* str_table, uint8_t** secti
     printf("\n");
 }
 
-void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
+void print_symbol_table(Elf32_data elf){
+    Elf32_Sym * symbols = elf.symbol_table;
+    size_t size = elf.symbol_table_size;
+    char* sm_str_table = elf.sm_str_table;
     printf("La table de symboles « .symtab » contient %ld entrées :\n",size);
     printf("   Num:    Valeur Tail Type    Lien   Vis      Ndx Nom\n");
     Elf32_Sym symbol;
     
+    // Affichage de la table des symboles
     for(int i = 0; i < size; i++)  {
-        
         symbol = symbols[i];
-
-        printf("%6d:",i);
-        printf("%10.8x",symbol.st_value);
-        printf("%5d ",symbol.st_size);
+        printf("%6d:",i); // Numéro
+        printf("%10.8x",symbol.st_value); // Valeur du symbole
+        printf("%5d ",symbol.st_size); // Taille
+        // Type du symbole
         int idx_type = ELF32_ST_TYPE(symbol.st_info);
         switch(idx_type) {
             case 0x10:
@@ -266,39 +283,54 @@ void print_symbol_table(Elf32_Sym * symbols, size_t size, char* sm_str_table) {
                 break;
         }
         printf("%-8s",SYMBOL_TYPE[idx_type]);
+        // Link
         printf("%-7s",SYMBOL_LIEN[ELF32_ST_BIND(symbol.st_info)]);
+        // Visibilité
         printf("%-8s",SYMBOL_VISIBILITY[ELF32_ST_VISIBILITY(symbol.st_other)]);
 
+        // Index
         int ndx = symbol.st_shndx;
         ndx == 0 ? printf("%4s", "UND") : printf("%4d", ndx);
+        // Affichage du symbole
         printf("%5s",&sm_str_table[symbol.st_name]);
         printf("\n");
 
     }
 }
 
-void print_relocation_table(Elf32_RelTable* rel_tables, size_t rel_tables_size, Elf32_RelaTable* rela_tables, size_t rela_tables_size, char* str_table, Elf32_Sym* symbole_table, Elf32_Shdr* shdr_table){
+void print_relocation_table(Elf32_data elf){
+    Elf32_RelTable* rel_tables = elf.rel_tables;
+    size_t rel_tables_size = elf.rel_tables_size;
+    Elf32_RelaTable* rela_tables = elf.rela_tables;
+    size_t rela_tables_size = elf.rela_tables_size;
+    char* str_table = elf.str_table;
+    Elf32_Sym* symbol_table = elf.symbol_table;
+    Elf32_Shdr* shdr_table = elf.shdr_table;
+
+    // Affichage des tables de relocations (sans addends)
     for(int i = 0; i < rel_tables_size; i++){
         Elf32_RelTable rel_table = rel_tables[i];
         Elf32_Off offset = rel_table.rel_table_offset;
         size_t nb_entries = rel_table.rel_table_size;
         printf("Section de réadressage '%s' à l'adresse de décalage 0x%x contient %ld entrées:\n", &str_table[rel_table.rel_table_name], offset, nb_entries);
         printf(" Décalage   Info   Type  Val.-sym  Noms-symboles\n");
+        // Affichage de toutes les relocations pour cette section
         for(int j = 0; j < rel_table.rel_table_size; j++){
             Elf32_Rel rel = rel_table.rel_table[j];
-            printf("%-10.8x", rel.r_offset);
-            printf("%-9.8x", rel.r_info);
-            int type = ELF32_R_TYPE(rel.r_info);
+            printf("%-10.8x", rel.r_offset); // Offset
+            printf("%-9.8x", rel.r_info); // Info
+            int type = ELF32_R_TYPE(rel.r_info); // Type
             printf("%4d ", type);
-            int symbol = ELF32_R_SYM(rel.r_info);
+            int symbol = ELF32_R_SYM(rel.r_info); // Symbole
             printf("%9.8x ", symbol);
-            int section_index = symbole_table[symbol].st_shndx;
-            printf("%14s", &str_table[shdr_table[section_index].sh_name]);
+            int section_index = symbol_table[symbol].st_shndx;
+            printf("%14s", &str_table[shdr_table[section_index].sh_name]); // Nom de la section correspondante
             printf("\n");
         }
         printf("\n");
     }
 
+    // Idem pour les relocations tables avec addends
     for(int i = 0; i < rela_tables_size; i++){
         Elf32_RelaTable rela_table = rela_tables[i];
         Elf32_Off offset = rela_table.rela_table_offset;
@@ -313,7 +345,7 @@ void print_relocation_table(Elf32_RelTable* rel_tables, size_t rel_tables_size, 
             printf("%4d ", type);
             int symbol = ELF32_R_SYM(rela.r_info);
             printf("%-8.8x", symbol);
-            int section_index = symbole_table[symbol].st_shndx;
+            int section_index = symbol_table[symbol].st_shndx;
             printf("%-12s", &str_table[shdr_table[section_index].sh_name]);
             printf("\n");
         }
