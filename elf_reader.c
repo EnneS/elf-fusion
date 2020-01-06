@@ -133,12 +133,12 @@ Elf32_data read_elf_data(FILE* file){
 void free_elf_data(Elf32_data elf){
     free(elf.shdr_table);
 
-    for(int i = 0; i < elf.e_header.e_shnum; i++){
-        free(elf.sections_data[i]);
+    if(elf.sections_data) {
+        for(int i = 0; i < elf.e_header.e_shnum; i++){
+                free(elf.sections_data[i]);
+            
+        }
+        free(elf.sections_data);
     }
-    free(elf.sections_data);
-
-    free(elf.rela_tables);
-    free(elf.rel_tables);
 }
 
