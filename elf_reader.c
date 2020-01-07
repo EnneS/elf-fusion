@@ -57,7 +57,7 @@ Elf32_data read_elf_data(FILE* file){
     elf_data.rel_tables = malloc(rel_count * sizeof(Elf32_RelTable));
 
     elf_data.progbits_nbr = progbits_nbr;
-    elf_data.progbits_sections = malloc(progbits_nbr * sizeof(uint8_t*));
+    elf_data.progbits_sections = malloc(progbits_nbr * sizeof(size_t));
 
     hash_init(&elf_data.sections_table, 32);
 
@@ -96,7 +96,7 @@ Elf32_data read_elf_data(FILE* file){
 
         switch(sh_type){
             case SHT_PROGBITS:
-                elf_data.progbits_sections[progbits_index] = elf_data.sections_data[i];
+                elf_data.progbits_sections[progbits_index] = i;
                 progbits_index++;
                 break;
             // Symbol Table
@@ -131,12 +131,15 @@ Elf32_data read_elf_data(FILE* file){
             elf_data.sm_str_table_size = sh_size;
         }
     }
-    for(int i = 0; i < reverse_2(elf_data.e_header.e_shnum); i++){
+    
+    // Enfin, reverse les données
+    reverse_elf_data(&elf_data);
+
+    for(int i = 0; i < elf_data.e_header.e_shnum; i++){
         hash_insert(&elf_data.sections_table, get_name(&elf_data, i), i);
     }
 
-    // Enfin, reverse les données
-    reverse_elf_data(&elf_data);
+    
     return elf_data;
 }
 

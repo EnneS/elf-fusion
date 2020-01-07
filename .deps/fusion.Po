@@ -59,7 +59,7 @@ fusion.o: fusion.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/strings.h \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h hashtable.h \
- elf_file_reverse.h affichage_elf.h /usr/include/ctype.h
+ elf_file_reverse.h affichage_elf.h /usr/include/ctype.h elf_fusion.h
 
 /usr/include/stdc-predef.h:
 
@@ -212,3 +212,5 @@ elf_file_reverse.h:
 affichage_elf.h:
 
 /usr/include/ctype.h:
+
+elf_fusion.h:

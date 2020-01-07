@@ -26,7 +26,7 @@ typedef struct{
     Elf32_Shdr* shdr_table;
     uint8_t** sections_data;
 
-    uint8_t** progbits_sections;
+    uint16_t* progbits_sections;
     size_t progbits_nbr;
 
     char* str_table;
