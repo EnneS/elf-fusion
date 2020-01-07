@@ -3,6 +3,7 @@
 
 #include "elf_file.h"
 #include "string.h"
+#include "stdio.h"
 
 Elf32_data merge(Elf32_data base, Elf32_data source);
 Elf32_data concat_progbits(Elf32_data base, Elf32_data source);
