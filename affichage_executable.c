@@ -41,7 +41,7 @@ int main(int argc, char ** argv) {
 
     //AFFICHAGE FONCTION OPTION
     if( 0 == strcmp(argv[1],"-r") ) {
-        printf("relocation table");
+        print_relocation_table(elf_data);
     } else if ( 0 == strcmp(argv[1],"-s") ) {
         print_symbol_table(elf_data);
     } else if( 0 == strcmp(argv[1],"-S") ) {
@@ -56,6 +56,8 @@ int main(int argc, char ** argv) {
             exit(1);
         }
         print_section_data(elf_data, atoi(argv[3]));
+    } else if( 0 == strcmp(argv[1],"-h")) {
+        print_elf_header(elf_data);
     }
     fclose(elf);
     return 0;
