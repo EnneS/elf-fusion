@@ -1,0 +1,125 @@
+affichage_elf.c
+
+  void print_elf_header;
+    --Entré:
+      Fichier elf
+    --Sortie:
+      Affiche les données concernant le header du fichier elf fourni.
+        -Nombre Magique
+        -Classe (ELF64 ou ELF32)
+        -Endianness
+        -L'OS / L'ABI
+        -Sa version ABI
+        -Son type
+
+        -Version de l'en-tête
+        -Adresses du point d'entée
+        -Adresses du début d'en-tête de programme
+        -Adresses du début d'en-tête de section
+        -Drapeaux spécifique au processeur
+        -Tailles de l'en-tête du fichier
+        -Taille de l'en-tête du programme
+        -Nombre(s) d'en-tête(s) du programme
+        -Table d'indexes des chaînes d'en-tête de section
+
+  void print_section_header_table;
+    --Entré:
+      Fichier elf
+    --Sortie:
+      Affiche les données concernant les en-têtes de sections
+      (No, Nom, Type, Addr, Deca, Tailles, etc) sous forme de tableau.
+
+  void print_section_data;
+    --Entré:
+      Fichier elf, numéro de section
+    --Sortie:
+      Affichage du contenu de la section passer en paramètre (si il existe)
+      par blocs de 4 octets en hexadécimal suivi de sa traduction en ASCII.
+
+  void print_symbol_table;
+    --Entré:
+      Fichier elf
+    --Sortie:
+      Affiche la table des symboles d'un fichier elf
+      (Numéro/Valeur/Taille/Type/Lien/Visibilité/Section/Nom du symbole)
+
+
+  void print_relocation_table;
+    --Entré:
+      Fichier elf
+    --Sortie:
+      Affiche la table de relocation (section de réadressage et adresse de décalage)
+      et son contenu (décalage, info, type, valeur du symbole, nom du symbole)
+
+
+affichage_executable.c
+
+  void print_info;
+    --Entré:
+      Aucune
+    --Sortie:
+      Affiche un mode d'emploi pour utiliser les différentes options de notre programme.
+
+  void usage;
+    --Entré:
+      Aucune
+    --Sortie:
+      Affiche la syntaxe d'utilisation de la fonction.
+
+  main;
+    --Entré:
+      Arguments : (option), nom du fichier, (section)
+    --Sortie:
+      Fait appel aux différentes fonctions d'affichage définies dans le fichier affichage_elf.c
+      en fonction de l'option indiqué pour le fichier elf passé en argument.
+
+
+elf_fusion.c
+
+// AU SECOURS //
+
+
+
+elf_reader.c
+
+  read_elf_header;
+    --Entré:
+      //A compléter//
+    --Sortie:
+      Commence la lecture du fichier elf passé en paramètre et recherche son header,
+      retourne 0 en cas de succès et -1 sinon.
+
+
+  read_elf_section_table
+    --Entré:
+      Fichier elf, table elf, décalage, nombre d'entrées et taille des entrées.
+    --Sortie:
+      Recherche et lit la section à l'offset correspondant, vérifie la cohérence de la taille de la section.
+      Retourne 0 en cas de succès et -1 sinon.
+
+
+  read_elf_data
+    --Entré:
+      //A compléter//
+    --Sortie:
+      //A compléter//
+
+  free_elf_data
+    --Entré:
+      Fichier elf
+    --Sortie:
+      Permet de libérer la mémoire.
+
+fusion.c
+
+  usage;
+    --Entré:
+      Aucune
+    --Sortie:
+      Affiche la syntaxe d'utilisation de la fonction.
+
+  main;
+    --Entré:
+      Arguments :   //A compléter//
+    --Sortie:
+      //A compléter//
