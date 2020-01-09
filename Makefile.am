@@ -26,8 +26,8 @@ EXTRA_DIST=filtre.pl
 SIMULATOR_INTERFACE=csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
 
 ARM_runner_example_SOURCES=$(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
-fusion_SOURCES=$(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c hashtable.h hashtable.c elf_file_reverse.h elf_file_reverse.c
-affichage_executable_SOURCES=$(COMMON) affichage_executable.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h hashtable.h hashtable.c elf_file.h elf_file.c elf_file_reverse.h elf_file_reverse.c
+fusion_SOURCES=$(COMMON) fusion.c elf_reader.h elf_reader.c elf_file.h elf_file.c affichage_elf.h affichage_elf.c elf_fusion.h elf_fusion.c hashtable.h hashtable.c elf_file_reverse.h elf_file_reverse.c elf_writer.h elf_writer.c
+affichage_executable_SOURCES=$(COMMON) affichage_executable.c affichage_elf.h affichage_elf.c elf_reader.c elf_reader.h hashtable.h hashtable.c elf_file.h elf_file.c elf_file_reverse.h elf_file_reverse.c elf_writer.h elf_writer.c
 
 EXTRA_DIST+=sample_run.sh
 

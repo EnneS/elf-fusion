@@ -324,6 +324,7 @@ void merge_symbol_table(Elf32_data* result, Elf32_data* base, Elf32_data* source
 
     // Màj de la string table désormais complétée
     size_t sm_str_table_index = hash_lookup(&result->sections_table, ".strtab");
+
     result->sections_data[sm_str_table_index] = (uint8_t*) result_sm_str_table; // Maj des données
     result->sm_str_table = (char*) result->sections_data[sm_str_table_index]; // pointeur sur les données
     result->shdr_table[sm_str_table_index].sh_size = result_sm_str_size;
@@ -344,7 +345,7 @@ void correct_reloc(Elf32_data* result, int type, size_t sec_size, size_t offset,
     if(type == SHT_REL){
         size_t last = result->rel_tables_size;
         result->rel_tables_size++;
-        result->rel_tables = realloc(result->rel_tables, result->rel_tables_size);
+        result->rel_tables = realloc(result->rel_tables, result->rel_tables_size * sizeof(Elf32_RelTable));
         result->rel_tables[last].rel_table_name = result->shdr_table[i].sh_name;
         result->rel_tables[last].rel_table_size = sec_size;
         result->rel_tables[last].rel_table = (Elf32_Rel*) result->sections_data[i];
@@ -364,18 +365,17 @@ void correct_reloc(Elf32_data* result, int type, size_t sec_size, size_t offset,
 
                 }
             }
-            
             rel[j].r_info = ELF32_R_INFO(srt[symbol], rtype);
         }
 
     } else { //SHT_RELA
         size_t last = result->rela_tables_size;
         result->rela_tables_size++;
-        result->rela_tables = realloc(result->rela_tables, result->rela_tables_size);
+        result->rela_tables = realloc(result->rela_tables, result->rela_tables_size * sizeof(Elf32_RelaTable));
         result->rela_tables[last].rela_table_name = result->shdr_table[i].sh_name;
         result->rela_tables[last].rela_table_size = sec_size;
         result->rela_tables[last].rela_table = (Elf32_Rela*) result->sections_data[i];
-
+        
         for(int j = offset; j < sec_size; j++){
             Elf32_Rela* rela = (Elf32_Rela*) result->sections_data[i];
 
@@ -399,13 +399,17 @@ void correct_reloc(Elf32_data* result, int type, size_t sec_size, size_t offset,
 }
 
 void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table, uint32_t* base_srt, uint32_t* source_srt){
-    result->rel_tables = malloc(base->rel_tables_size * sizeof(Elf32_Rel));
+    result->rel_tables = NULL;
+    result->rel_tables_size = 0;
+    result->rela_tables = NULL;
+    result->rela_tables_size = 0;
+    /*result->rel_tables = malloc(base->rel_tables_size * sizeof(Elf32_Rel));
     memcpy(result->rel_tables, base->rel_tables, base->rel_tables_size * sizeof(Elf32_Rel));
     result->rel_tables_size = base->rel_tables_size;
     result->rela_tables = malloc(base->rela_tables_size * sizeof(Elf32_Rela));
     memcpy(result->rela_tables, base->rela_tables, base->rela_tables_size * sizeof(Elf32_Rela));
     result->rela_tables_size = base->rela_tables_size;
-
+*/
     uint16_t shnum = result->e_header.e_shnum;
     // On copie toutes les sections du premier, en fusionnant avec le deuxième si nécéssaire
     for(int i = 0; i < shnum; ++i){
@@ -432,7 +436,7 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
             // On regarde si la section existe dans le deuxième fichier
             // sinon on copie simplement la première
             if(source_section_index != HASH_FAIL){
-                
+                // Les deux existent, on fusionne
                 size_t offset = base_sec_size+padding;
                 memset(&result->sections_data[i][base_sec_size], 0, padding);
                 memcpy(&result->sections_data[i][offset], source->sections_data[source_section_index], source_sec_size);
@@ -445,6 +449,10 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
                 merge_table[source_section_index].section_index = i;
                 merge_table[source_section_index].offset = offset;
 
+            }
+            else{
+                size_t nb_entries = base_sec_size / base->shdr_table[i].sh_entsize;
+                correct_reloc(result, type, nb_entries, 0, i, base_srt);
             }
         }
     }
@@ -491,7 +499,11 @@ void merge(Elf32_data* result, Elf32_data* base, Elf32_data* source){
     init_new_elf(result, base, source);
     merge_str_table(result, base, source, merge_table);
     concat_progbits(result, base, source, merge_table);
+
+
     init_sections_table(result);
     merge_symbol_table(result, base, source, merge_table, base_srt, source_srt);
+     
     concat_reloc(result, base, source, merge_table, base_srt, source_srt);
+   
 }

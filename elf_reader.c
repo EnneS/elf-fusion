@@ -40,11 +40,10 @@ Elf32_data read_elf_data(FILE* file){
 
     //Récupération de la table de programme
     elf_data.program_header_table = malloc(reverse_4(elf_data.e_header.e_phnum) * reverse_4(elf_data.e_header.e_phentsize));
-    
+
     if(read_elf_program_header_table(file, elf_data.program_header_table, reverse_4(elf_data.e_header.e_phoff), reverse_4(elf_data.e_header.e_phnum), reverse_4(elf_data.e_header.e_phentsize))){
         fprintf(stderr, "couldn't read program table\n");
     }
-
 
     // Récupération des entêtes des sections
     elf_data.shdr_table = malloc(sizeof(Elf32_Shdr) * reverse_2(elf_data.e_header.e_shnum));
