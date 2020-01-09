@@ -97,10 +97,10 @@ void concat_progbits(Elf32_data* result, Elf32_data* base, Elf32_data* source, S
         size_t source_sec_size = source->shdr_table[idx].sh_size;
 
         char* section_name = get_name(source, idx);
-        int source_section_index = hash_lookup(&base->sections_table, section_name);
+        int base_section_index = hash_lookup(&base->sections_table, section_name);
 
         // Si la section ne fait pas partie du premier fichier, on l'ajoute
-        if(source_section_index == HASH_FAIL){
+        if(base_section_index == HASH_FAIL){
             size_t res_idx = base_shnum + j;
             result->sections_data[res_idx] = malloc(source_sec_size);
             result->shdr_table[res_idx] = source->shdr_table[idx];
@@ -110,8 +110,8 @@ void concat_progbits(Elf32_data* result, Elf32_data* base, Elf32_data* source, S
 
             memcpy(result->sections_data[res_idx], source->sections_data[idx], source_sec_size);
 
-            merge_table[source_section_index].section_index = res_idx;
-            merge_table[source_section_index].offset = 0;
+            merge_table[idx].section_index = res_idx;
+            merge_table[idx].offset = 0;
 
             j++;
         }
