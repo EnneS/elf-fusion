@@ -36,17 +36,20 @@ void init_new_elf(Elf32_data* result, Elf32_data* base, Elf32_data* source){
 void merge_str_table(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table){
     // Copie de la str_table (nom des en-têtes de section)
     size_t new_str_table_size = base->str_table_size + source->str_table_size;
+    int shstrndx = result->e_header.e_shstrndx;
     result->str_table_size = new_str_table_size;
-    result->sections_data[result->e_header.e_shstrndx] = malloc(new_str_table_size);
-    result->str_table = (char*) result->sections_data[result->e_header.e_shstrndx];
+    result->sections_data[shstrndx] = malloc(new_str_table_size);
+    
+    result->str_table = (char*) result->sections_data[shstrndx];
+
     memcpy(result->str_table, base->str_table, base->str_table_size);
     memcpy(&result->str_table[base->str_table_size], source->str_table, source->str_table_size);
-    result->shdr_table[result->e_header.e_shstrndx].sh_size = new_str_table_size;
+    
+    result->shdr_table[shstrndx].sh_size = new_str_table_size;
 
     // Mémorisation du numéro de la section pour la renumérotation des symboles
-    merge_table[source->e_header.e_shstrndx].section_index = result->e_header.e_shstrndx;
+    merge_table[source->e_header.e_shstrndx].section_index = shstrndx;
     merge_table[source->e_header.e_shstrndx].offset = base->str_table_size;
-    
 }
 
 
@@ -59,11 +62,8 @@ void concat_progbits(Elf32_data* result, Elf32_data* base, Elf32_data* source, S
         size_t base_sec_size = base->shdr_table[i].sh_size;
 
         //alignement
-        size_t align = base->shdr_table[i].sh_addralign;
-        size_t padding = 0;
-        if(align > 0){
-            padding = align - 1 - ((base_sec_size + align - 1) % align); //alignement sur <align> octets
-        }
+        size_t padding = alignement(base_sec_size, base->shdr_table[i].sh_addralign);
+        
         
         // Pour les sections progbits
         if(base->shdr_table[i].sh_type == SHT_PROGBITS){
@@ -325,14 +325,16 @@ void merge_symbol_table(Elf32_data* result, Elf32_data* base, Elf32_data* source
 
     // Màj de la string table désormais complétée
     size_t sm_str_table_index = hash_lookup(&result->sections_table, ".strtab");
+    size_t sym_table_index = hash_lookup(&result->sections_table, ".symtab");
 
     result->sections_data[sm_str_table_index] = (uint8_t*) result_sm_str_table; // Maj des données
+    result->sections_data[sym_table_index] = (uint8_t*) result->symbol_table;
     result->sm_str_table = (char*) result->sections_data[sm_str_table_index]; // pointeur sur les données
     result->shdr_table[sm_str_table_index].sh_size = result_sm_str_size;
     result->sm_str_table_size = result_sm_str_size;
     
     result->symbol_table_size = result_st_size;
-    result->shdr_table[hash_lookup(&result->sections_table, ".symtab")].sh_size = sizeof(Elf32_Sym) * result_st_size;
+    result->shdr_table[sym_table_index].sh_size = sizeof(Elf32_Sym) * result_st_size;
 }
 
 void init_sections_table(Elf32_data* result){
@@ -498,8 +500,8 @@ void merge(Elf32_data* result, Elf32_data* base, Elf32_data* source){
     uint32_t* source_srt = malloc(source->symbol_table_size * sizeof(uint32_t));
     Section_Merge_Info* merge_table = malloc(sizeof(Section_Merge_Info) * source->e_header.e_shnum);
     init_new_elf(result, base, source);
-    merge_str_table(result, base, source, merge_table);
     concat_progbits(result, base, source, merge_table);
+    merge_str_table(result, base, source, merge_table);
 
 
     init_sections_table(result);

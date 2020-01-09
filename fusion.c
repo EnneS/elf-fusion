@@ -50,17 +50,18 @@ int main(int argc, char *argv[]){
     print_symbol_table(result);
     printf("\n==== MERGED RELOCATION TABLE  ====\n");
     print_relocation_table(result);
-    
+
 
     printf("\n======== ECRITURE ========\n");
+
     write_elf_data(&result, resultat_file);
 
+    printf("\n======== FREE ========\n");
     free_elf_data(elf1_data);
     free_elf_data(elf2_data);
 
     //free_elf_data(result);
 
-    printf("\n======== FREE ========\n");
 
     fclose(elf1);
     fclose(elf2);

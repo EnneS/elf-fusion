@@ -6,6 +6,7 @@
 #include "elf_file.h"
 #include "stdlib.h"
 #include "elf_file_reverse.h"
+#include "util.h"
 
 /* Ecriture d'un Elf32_data dans un fichier */
 

@@ -4,6 +4,7 @@
 #include "elf_file.h"
 #include "string.h"
 #include "stdio.h"
+#include "util.h"
 
 /*
 *  Fusion de deux fichiers ELF

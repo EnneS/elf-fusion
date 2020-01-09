@@ -25,23 +25,21 @@ int write_program_header_table(FILE* file, Elf32_Phdr* table, size_t offset, siz
 }
 
 void write_elf_data(Elf32_data* elf, FILE* file){
-    printf("aa\n");
     reverse_elf_data(elf, 0);
-    printf("az\n");
 
     // Laisser de la place pour l'entête ELF
     fseek(file, sizeof(Elf32_Ehdr), SEEK_SET);
-    printf("ada\n");
 
     // Ecriture du program header
     if(write_program_header_table(file, elf->program_header_table, reverse_4(elf->e_header.e_phoff), reverse_2(elf->e_header.e_phnum), reverse_2(elf->e_header.e_phentsize))){
         fprintf(stderr, "couldn't write program header table\n");
     }
-    printf("affa\n");
 
     // Ecriture du contenu des sections
     for(int i = 1; i < reverse_2(elf->e_header.e_shnum); i++){
         uint32_t offset = ftell(file);
+        offset += alignement(offset, reverse_4(elf->shdr_table[i].sh_addralign));
+
         elf->shdr_table[i].sh_offset = reverse_4(offset);
         // Ecriture de la section
         size_t size = elf->shdr_table[i].sh_size;
@@ -51,7 +49,6 @@ void write_elf_data(Elf32_data* elf, FILE* file){
             }    
         } 
     }
-        printf("aaggg\n");
 
     uint32_t offset = ftell(file);
     elf->e_header.e_shoff = reverse_4(offset);
@@ -59,7 +56,6 @@ void write_elf_data(Elf32_data* elf, FILE* file){
     if(write_elf_section_table(file, elf->shdr_table, reverse_4(elf->e_header.e_shoff), reverse_2(elf->e_header.e_shnum),reverse_2(elf->e_header.e_shentsize))){
         fprintf(stderr, "couldn't write section table\n");
     }
-        printf("afgfdga\n");
 
     // Ecriture du ELF Header
     fseek(file, 0, SEEK_SET);

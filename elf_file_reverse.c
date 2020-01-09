@@ -20,6 +20,7 @@ void reverse_elf_data(Elf32_data* elf_data, int is_reversed){
     for(int i = 0; i < elf_data->symbol_table_size; i++){
         reverse_elf_sym(&elf_data->symbol_table[i]);
     }
+    
 
     // Reverse les relocations tables (avec et sans addends)
     for(int i = 0; i < elf_data->rela_tables_size; i++){
@@ -39,7 +40,6 @@ void reverse_elf_data(Elf32_data* elf_data, int is_reversed){
             reverse_elf_rel(&rt->rel_table[j]);;
         }
     }
-        printf("aga\n");
 
 }
 

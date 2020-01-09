@@ -27,3 +27,10 @@ int is_big_endian() {
     static uint32_t one = 1;
     return ((* (uint8_t *) &one) == 0);
 }
+
+int alignement(size_t address, int align){
+    if(align > 0){
+        return align - 1 - ((address + align - 1) % align); //alignement sur <align> octets
+    }
+    return 0;
+}
