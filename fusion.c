@@ -26,29 +26,18 @@ int main(int argc, char *argv[]){
     elf1_data = read_elf_data(elf1);
     elf2_data = read_elf_data(elf2);
 
-    // print_elf_header(elf1_data);
-
     print_section_header_table(elf1_data);
     print_section_header_table(elf2_data);
-/*
-
-    print_relocation_table(elf1_data);
-
-    print_section_data(elf1_data, 7);
-
-    printf("\n ____ 2 ____ \n");
-    print_section_data(elf2_data, 7);
-
-    printf("\n ____ FUSION ____ \n");
     
+    print_relocation_table(elf2_data);
+    print_symbol_table(elf2_data);
 
-    print_section_data(result, 5);
-    */
+    printf("\n\n======== MERGE ========\n\n");
+
     merge(&result, &elf1_data, &elf2_data);
-    print_section_header_table(result);
-    
+    print_section_header_table(elf2_data);
     print_symbol_table(result);
-    print_section_data(result, 10);
+    print_relocation_table(result);
 
     free_elf_data(elf1_data);
     free_elf_data(elf2_data);

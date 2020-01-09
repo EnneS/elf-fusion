@@ -308,6 +308,7 @@ void print_relocation_table(Elf32_data elf){
     Elf32_RelaTable* rela_tables = elf.rela_tables;
     size_t rela_tables_size = elf.rela_tables_size;
     char* str_table = elf.str_table;
+    char* sm_str_table = elf.sm_str_table;
     Elf32_Sym* symbol_table = elf.symbol_table;
     Elf32_Shdr* shdr_table = elf.shdr_table;
 
@@ -325,10 +326,17 @@ void print_relocation_table(Elf32_data elf){
             printf("%-9.8x", rel.r_info); // Info
             int type = ELF32_R_TYPE(rel.r_info); // Type
             printf("%4d ", type);
-            int symbol = ELF32_R_SYM(rel.r_info); // Symbole
-            printf("%9.8x ", symbol);
-            int section_index = symbol_table[symbol].st_shndx;
-            printf("%-14s", &str_table[shdr_table[section_index].sh_name]); // Nom de la section correspondante
+            int symbol_index = ELF32_R_SYM(rel.r_info); // Symbole
+            Elf32_Sym symbol = symbol_table[symbol_index];
+            printf("%9.8x ", symbol.st_value);
+            if(ELF32_ST_TYPE(symbol.st_info) == STT_SECTION) {
+                // SECTION
+                // Nom de la section correspondante
+                int section_index = symbol.st_shndx;
+                printf("%-14s", &str_table[shdr_table[section_index].sh_name]); // Nom de la section correspondante
+            } else {
+                printf("%-14s", &sm_str_table[symbol.st_name]); // Nom du symbole correspondant
+            }
             printf("\n");
         }
         printf("\n");

@@ -28,9 +28,10 @@ void init_new_elf(Elf32_data* result, Elf32_data* base, Elf32_data* source);
 // Fusion de la string table des noms de section
 void merge_str_table(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table);
 
-// Fusion des sections PROGBITS
+// Fusion des sections ce type PROGBITS
 void concat_progbits(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table);
 
+// Initialisation de la hastable des sections de result
 void init_sections_table(Elf32_data* result);
 
 /*
@@ -38,9 +39,12 @@ void init_sections_table(Elf32_data* result);
 */
 
 // Fusion de deux tables des symboles en entrées et rénumérotation deux ceux-ci
-void merge_symbol_table(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table);
+void merge_symbol_table(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table, uint32_t* base_srt, uint32_t* source_srt);
 
-// Ajout d'un symbol dans une table des symboles
+
+void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table, uint32_t* base_srt, uint32_t* source_srt);
+
+// Ajout d'un symbole dans une table des symboles
 void add_symbol(Elf32_Sym* table, Elf32_Sym sym, size_t* index);
 
 // Un symbole est indéfini lorsque son bind vaut SHN_UNDEF
@@ -52,6 +56,7 @@ int should_relocate_symbol(Elf32_Sym sym);
 // Récupération du nom du symbole dans la string table des symboles
 char* get_symbol_name(Elf32_data* elf, Elf32_Sym sym);
 
+// Ajoute un nom d'un symbole à la string table des symboles et retourne son offset dans celle-ci
 size_t add_to_sm_str_table(char** result_sm_str_table, size_t* result_sm_str_size, char* name);
 
 #endif
