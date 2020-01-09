@@ -30,23 +30,29 @@ int main(int argc, char *argv[]){
     
 	resultat_file = fopen(argv[3], "w");
 
-    printf("\n\n======== LECTURE ========\n\n");
+    printf("======== LECTURE ========\n");
 
     elf1_data = read_elf_data(elf1);
     elf2_data = read_elf_data(elf2);
 
+    /*
     print_section_header_table(elf1_data);
     print_section_header_table(elf2_data);
-    
+    */
 
-    printf("\n\n======== MERGE ========\n\n");
+    printf("\n======== MERGE ========\n");
 
     merge(&result, &elf1_data, &elf2_data);
+    
+    printf("\n==== MERGED SECTIONS HEADER  ====\n");
     print_section_header_table(result);
+    printf("\n==== MERGED SYMBOL TABLE  ====\n");
     print_symbol_table(result);
+    printf("\n==== MERGED RELOCATION TABLE  ====\n");
     print_relocation_table(result);
+    
 
-    printf("\n\n======== ECRITURE ========\n\n");
+    printf("\n======== ECRITURE ========\n");
     write_elf_data(&result, resultat_file);
 
     free_elf_data(elf1_data);
@@ -54,7 +60,7 @@ int main(int argc, char *argv[]){
 
     //free_elf_data(result);
 
-    printf("\n\n======== FREE ========\n\n");
+    printf("\n======== FREE ========\n");
 
     fclose(elf1);
     fclose(elf2);

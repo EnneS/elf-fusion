@@ -1,15 +1,18 @@
 #include "elf_file_reverse.h"
 
 // Reverse de Elf32_data
-void reverse_elf_data(Elf32_data* elf_data){
+void reverse_elf_data(Elf32_data* elf_data, int is_reversed){
+    size_t e_phnum = is_reversed ? reverse_2(elf_data->e_header.e_phnum) : elf_data->e_header.e_phnum;
+    size_t e_shnum = is_reversed ? reverse_2(elf_data->e_header.e_shnum) : elf_data->e_header.e_shnum;
+
     reverse_elf_ehdr(&elf_data->e_header); // Reverse l'en-tête ELF
 
-    for(int i = 0; i < elf_data->e_header.e_phnum; i++){
+    for(int i = 0; i < e_phnum; i++){
         reverse_elf_phdr(&elf_data->program_header_table[i]); // Reverse l'en-tête ELF
     }
 
     // Reverse les en-têtes des sections
-    for(int i = 0; i < elf_data->e_header.e_shnum; i++){
+    for(int i = 0; i < e_shnum; i++){
         reverse_elf_shdr(&elf_data->shdr_table[i]);
     }
 
@@ -27,14 +30,17 @@ void reverse_elf_data(Elf32_data* elf_data){
             reverse_elf_rela(&rt->rela_table[j]);
         }
     }
+
     for(int i = 0; i < elf_data->rel_tables_size; i++){
         Elf32_RelTable* rt = &elf_data->rel_tables[i];
         rt->rel_table_name = reverse_4(rt->rel_table_name);
         rt->rel_table_offset = reverse_4(rt->rel_table_offset);
         for(int j = 0; j < rt->rel_table_size; j++){
-            reverse_elf_rel(&rt->rel_table[j]);
+            reverse_elf_rel(&rt->rel_table[j]);;
         }
     }
+        printf("aga\n");
+
 }
 
 // Reverse de Elf32_Ehdr

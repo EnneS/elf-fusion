@@ -41,7 +41,8 @@ void merge_str_table(Elf32_data* result, Elf32_data* base, Elf32_data* source, S
     result->str_table = (char*) result->sections_data[result->e_header.e_shstrndx];
     memcpy(result->str_table, base->str_table, base->str_table_size);
     memcpy(&result->str_table[base->str_table_size], source->str_table, source->str_table_size);
-    
+    result->shdr_table[result->e_header.e_shstrndx].sh_size = new_str_table_size;
+
     // Mémorisation du numéro de la section pour la renumérotation des symboles
     merge_table[source->e_header.e_shstrndx].section_index = result->e_header.e_shstrndx;
     merge_table[source->e_header.e_shstrndx].offset = base->str_table_size;
@@ -444,7 +445,7 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
                 result->shdr_table[i].sh_size = sec_size;
                 result->sections_data[i] = realloc(result->sections_data[i], sec_size);
 
-                correct_reloc(result, type, sec_size, offset, i, base_srt);
+                correct_reloc(result, type, sec_size / source->shdr_table[source_section_index].sh_entsize, offset, i, base_srt);
 
                 merge_table[source_section_index].section_index = i;
                 merge_table[source_section_index].offset = offset;

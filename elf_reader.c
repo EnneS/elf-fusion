@@ -151,7 +151,7 @@ Elf32_data read_elf_data(FILE* file){
     }
     
     // Enfin, reverse les données
-    reverse_elf_data(&elf_data);
+    reverse_elf_data(&elf_data, 1);
 
     for(int i = 0; i < elf_data.e_header.e_shnum; i++){
         hash_insert(&elf_data.sections_table, get_name(&elf_data, i), i);
