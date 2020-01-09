@@ -3,39 +3,39 @@ Section de réadressage '.rel.text' à l'adresse de décalage 0x260 contient 2 e
 
  Décalage   Info   Type  Val.-sym  Noms-symboles
 
-0000001c  00000202    2  00000002 .data         
+0000001c  00000202    2  00000000 .data         
 
-00000020  00000202    2  00000002 .data         
+00000020  00000202    2  00000000 .data         
 
 Section de réadressage '.rel.debug_line' à l'adresse de décalage 0x270 contient 1 entrées:
 
  Décalage   Info   Type  Val.-sym  Noms-symboles
 
-0000002e  00000102    2  00000001 .text         
+0000002e  00000102    2  00000000 .text         
 
 Section de réadressage '.rel.debug_info' à l'adresse de décalage 0x278 contient 7 entrées:
 
  Décalage   Info   Type  Val.-sym  Noms-symboles
 
-00000006  00000902    2  00000009 .debug_abbrev 
+00000006  00000902    2  00000000 .debug_abbrev 
 
-0000000c  00000a02    2  0000000a .debug_line   
+0000000c  00000a02    2  00000000 .debug_line   
 
-00000010  00000102    2  00000001 .text         
+00000010  00000102    2  00000000 .text         
 
-00000014  00000102    2  00000001 .text         
+00000014  00000102    2  00000000 .text         
 
-00000018  00000b02    2  0000000b .debug_str    
+00000018  00000b02    2  00000000 .debug_str    
 
-0000001c  00000b02    2  0000000b .debug_str    
+0000001c  00000b02    2  00000000 .debug_str    
 
-00000020  00000b02    2  0000000b .debug_str    
+00000020  00000b02    2  00000000 .debug_str    
 
 Section de réadressage '.rel.debug_aranges' à l'adresse de décalage 0x2b0 contient 2 entrées:
 
  Décalage   Info   Type  Val.-sym  Noms-symboles
 
-00000006  00000802    2  00000008 .debug_info   
+00000006  00000802    2  00000000 .debug_info   
 
-00000010  00000102    2  00000001 .text         
+00000010  00000102    2  00000000 .text         
 
