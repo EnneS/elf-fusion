@@ -8,17 +8,13 @@ trim() {
     echo -n "$var"
 }
 
-#ON TESTE LES DIFFERENCES POUR CHAQUE FICHIERS TESTE .O PRESENT DANS EXEMPLES_LOADER
-for file in Examples_loader/*.o
-do
-
-    echo "/************** Debut teste sur le fichier $file *******************/"
+echo "/************** Debut teste sur le fichier $1 *******************/"
 
     echo "/************** Debut teste arm-eabi-readelf -h *******************/"
     echo " "
 
     #ON EXECUTE ARM-EABI-READELF AFIN DE LE COMPARER A NOTRE AFFICHAGE
-    texte=$(arm-none-eabi-readelf -h $file)
+    texte=$(arm-none-eabi-readelf -h $1)
     # SAUVEGARDE DE IFS
     OLD_IFS=$IFS
     IFS=$'\n'
@@ -26,7 +22,6 @@ do
     for line in $texte
     do 
         line=$(echo $line | cut -d: -f2)
-
         #ON REGARDE LA LIGNE A L'AQUELLE ON EST
         if [ $idx -eq 1 ] 
         then 
@@ -93,9 +88,8 @@ do
         fi
         idx=$((idx + 1))
     done
-
-    #ON EXECUTE NOTRE AFFICHAGE  AFIN DE LE COMPARER AU VARIABLE STOCKER DE ARM-EABI-READELF
-    texte=$(./affichage_executable -h $file)
+    #ON EXECUTE NOTRE AFFICHAGE AFIN DE LE COMPARER AU VARIABLE STOCKER DE ARM-EABI-READELF
+    texte=$(./affichage_executable -h $1)
     idx=0
     for line in $texte
     do 
@@ -120,9 +114,6 @@ do
             then 
                 echo "Différence sur données :'"$data"' '"$line"'"
             fi
-        # elif [ $idx -eq 4 ] 
-        # then
-        #     version=$line
         elif [ $idx -eq 4 ] 
         then
             if [ $os != $line ]
@@ -230,7 +221,7 @@ do
     while [ $i -lt $nbSectionHeader ]
     do
 
-        texte=$(arm-none-eabi-readelf -x $i $file)
+        texte=$(arm-none-eabi-readelf -x $i $1)
         texteCut=$(echo $texte | cut -d':' -f2)
         #L'AFFICHAGE DE ARM-EABI PRODUIT PARFOIS UNE NOTE QUE NOTRE AFFICHAGE NE PRODUIT PAS, ON VERIFIE S'IL ELLE Y EST ET ON LA RETIRE SI C'EST LE CAS
         if [ "$texteCut" == " NOTE" ] 
@@ -239,7 +230,7 @@ do
             texteCut=$(echo $texteCut | cut -d':' -f2)
         fi
         
-        texte2=$(./affichage_executable -x $file $i)
+        texte2=$(./affichage_executable -x $1 $i)
         texte2=$(echo $texte2 | cut -d':' -f2)
 
         if [ "$texte2" != "$texteCut" ]
@@ -255,8 +246,178 @@ do
         i=$((i+1))
     done
     echo " "
-done
 
 
 
+    echo " "
+    echo "/************** Debut teste arm-eabi-readelf -S *******************/"
+    echo " "
+
+    texte=$(arm-none-eabi-readelf -S $1)
+
+    idx=0
+
+    # SAUVEGARDE DE IFS
+    OLD_IFS=$IFS
+    IFS=$'\n'
+
+    table=''
+    for line in $texte
+    do
+        if [ $idx -eq 0 ]
+        then    
+            nbSection=$(echo $line | cut -d" " -f 3)
+            start=$(echo $line | cut -d" " -f 9 | cut -d":" -f1)
+        fi
+        if [ $idx -gt 2 ] && [ $idx -lt 20 ]
+        then 
+            table=$table$'\n'$line
+        fi
+
+        idx=$((idx+1))
+    done
+
+    texteProgramme=$(./affichage_executable -S $1)
+    idx=0
+    tableProgramme=''
+    for line in $texteProgramme
+    do
+        if [ $idx -eq 0 ]
+        then    
+            nbSectionProgramme=$(echo $line | cut -d" " -f4)
+            startProgramme=$(echo $line | cut -d" " -f 11 | cut -d":" -f1)
+        fi
+        if [ $idx -gt 2 ] && [ $idx -lt 20 ]
+        then 
+            tableProgramme=$tableProgramme$'\n'$line
+        fi
+
+        idx=$((idx+1))
+    done
+
+    if [ "$nbSectionProgramme" != "$nbSection" ] 
+    then    
+        echo "différence nombre de sections arm-eabi : $nbSection Programme : $nbSectionProgramme"
+    fi
+
+    if [ "$start" != "$startProgramme" ] 
+    then    
+        echo "différence décalage : $start Programme : $startProgramme"
+    fi
+
+    i=0
+    for line in $tableProgramme
+    do 
+        # ON NE LAISSE QU'UN SEUL ESPACE QUAND IL Y EN À PLUSIEUR AFIN DE NE PAS DETECTER DE DIFFERENCE LIER A UN NOMBRE DIFFERENT D'ESPACE
+        line=$(echo $line | sed "s/\ \ */\ /g")
+        line=$(echo $line | sed "s/\[\ /\[/g")
+        line=$(trim $line)
+
+        i2=0
+        for lineTable in $table
+        do
+            if [ $i2 -eq $i ]
+            then
+                lineTable=$(echo $lineTable | sed "s/\ \ */\ /g")
+                lineTable=$(echo $lineTable | sed "s/\[\ /\[/g")
+                lineTable=$(trim $lineTable)
+                if [ "$line" != "$lineTable" ]
+                then
+                    echo -e "Différence dans la table \narm-eabi :\n" $line "\nprogramme : \n" $lineTable
+                fi
+            fi
+            i2=$((i2+1))
+        done
+        i=$(($i+1))
+    done
+
+    #ON RESTAURE IFS
+    IFS=$OLD_IFS
+
+
+
+    echo " "
+    echo "/************** Debut teste arm-eabi-readelf -s *******************/"
+    echo " "
+
+    texte=$(arm-none-eabi-readelf -s $1)
+    texteProgramme=$(./affichage_executable -s $1)
+
+    idx=0
+
+    # SAUVEGARDE DE IFS
+    OLD_IFS=$IFS
+    IFS=$'\n'
+
+    table=''
+    for line in $texte
+    do
+        if [ $idx -eq 0 ]
+        then    
+            symbol=$(echo $line | cut -d" " -f3)
+            nbEntry=$(echo $line | cut -d" " -f5)
+        fi
+        if [ $idx -gt 2 ]
+        then 
+            # ON NE LAISSE QU'UN SEUL ESPACE QUAND IL Y EN À PLUSIEUR AFIN DE NE PAS DETECTER DE DIFFERENCE LIER A UN NOMBRE DIFFERENT D'ESPACE
+            line=$(echo $line | sed "s/\ \ */\ /g")
+            line=$(echo $line | sed "s/\[\ /\[/g")
+            line=$(trim $line)
+            table=$table$'\n'$line
+        fi
+        idx=$((idx+1))
+    done
+
+    idx=0
+    tableProgramme=''
+    for line in $texteProgramme
+    do
+        if [ $idx -eq 0 ]
+        then    
+            symbolProgramme=$(echo $line | cut -d" " -f5)
+            nbEntryProgramme=$(echo $line | cut -d" " -f7)
+        fi
+        if [ $idx -gt 2 ]
+        then 
+            # ON NE LAISSE QU'UN SEUL ESPACE QUAND IL Y EN À PLUSIEUR AFIN DE NE PAS DETECTER DE DIFFERENCE LIER A UN NOMBRE DIFFERENT D'ESPACE
+            line=$(echo $line | sed "s/\ \ */\ /g")
+            line=$(echo $line | sed "s/\[\ /\[/g")
+            line=$(trim $line)
+            tableProgramme=$tableProgramme$'\n'$line
+        fi
+        idx=$((idx+1))
+    done
+
+    if [ "$symbolProgramme" != "$symbol" ] 
+    then    
+        echo "différence nom table arm-eabi : $symbol Programme : $symbolProgramme"
+    fi
+
+    if [ "$nbEntryProgramme" != "$nbEntry" ] 
+    then    
+        echo "différence entré du programme arm-eabi : $nbEntry Programme : $nbEntryProgramme"
+    fi
+
+    i=0
+    for line in $tableProgramme
+    do 
+        i2=0
+        for lineTable in $table
+        do
+            if [ $i2 -eq $i ]
+            then
+                if [ "$line" != "$lineTable" ]
+                then
+                    echo -e "Différence dans la table\narm-eabi :\n" $line "\nprogramme : \n" $lineTable
+                fi
+            fi
+            i2=$((i2+1))
+        done
+        i=$(($i+1))
+    done
+
+    # #ON RESTAURE IFS
+    IFS=$OLD_IFS
+
+    echo ""
 

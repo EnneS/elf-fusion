@@ -437,11 +437,11 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/r/royetju/elf-fusion/Examples_loader'
+ac_pwd='/home/cleo/Documents/Cours/Grenoble/Prog5/projet/Examples_loader'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
-AWK='gawk'
+AWK='mawk'
 test -n "$AWK" || AWK=awk
 # The default lists apply if the user does not specify any file.
 ac_need_defaults=:
@@ -654,17 +654,17 @@ S["am__tar"]="$${TAR-tar} chof - \"$$tardir\""
 S["AMTAR"]="$${TAR-tar}"
 S["am__leading_dot"]="."
 S["SET_MAKE"]=""
-S["AWK"]="gawk"
+S["AWK"]="mawk"
 S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="arm-none-eabi-strip"
-S["install_sh"]="${SHELL} /home/r/royetju/elf-fusion/build-aux/install-sh"
-S["MAKEINFO"]="${SHELL} /home/r/royetju/elf-fusion/build-aux/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/r/royetju/elf-fusion/build-aux/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /home/r/royetju/elf-fusion/build-aux/missing automake-1.16"
-S["AUTOCONF"]="${SHELL} /home/r/royetju/elf-fusion/build-aux/missing autoconf"
-S["ACLOCAL"]="${SHELL} /home/r/royetju/elf-fusion/build-aux/missing aclocal-1.16"
+S["install_sh"]="${SHELL} /home/cleo/Documents/Cours/Grenoble/Prog5/projet/build-aux/install-sh"
+S["MAKEINFO"]="${SHELL} /home/cleo/Documents/Cours/Grenoble/Prog5/projet/build-aux/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/cleo/Documents/Cours/Grenoble/Prog5/projet/build-aux/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/cleo/Documents/Cours/Grenoble/Prog5/projet/build-aux/missing automake-1.16"
+S["AUTOCONF"]="${SHELL} /home/cleo/Documents/Cours/Grenoble/Prog5/projet/build-aux/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/cleo/Documents/Cours/Grenoble/Prog5/projet/build-aux/missing aclocal-1.16"
 S["VERSION"]="1.0"
 S["PACKAGE"]="arm-examples"
 S["CYGPATH_W"]="echo"
