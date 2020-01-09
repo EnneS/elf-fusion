@@ -435,6 +435,7 @@ echo "/************** Debut teste sur le fichier $1 *******************/"
         echo $line$'\n' >> fichierTexteShellProgramme.txt
     done
 
+    #ON RECUPERE LE FICHIER ON A A CHAQUE FOIS UNE LIGNE SUR DEUX DE ARM ET L'AUTRE DU PROGRAMME, IL FAUT APRES LES COMPARER
     texteConcat=$(paste -d'\n' "fichierTexteShellArm.txt" "fichierTexteShellProgramme.txt")
 
     i=0
@@ -451,6 +452,7 @@ echo "/************** Debut teste sur le fichier $1 *******************/"
         i=$((i+1))
         if [ $i -eq 2 ]
         then 
+            #ON COMPARE LES DEUX LIGNES
             if [ "$ligne1" != "$lige2" ]
             then
                 echo -e "différence realocation table \n arm-eabi : "$ligne1"\nprogramme : "$ligne2"\n"
