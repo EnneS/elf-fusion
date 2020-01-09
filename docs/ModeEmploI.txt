@@ -1,0 +1,5 @@
+Fusion :
+./fusion fichier_elf_1 fichier_elf_2 fichier_resultat
+
+Affichage :
+./affichage_executable --help
