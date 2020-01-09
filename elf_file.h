@@ -24,6 +24,8 @@ typedef struct{
 typedef struct{
     Elf32_Ehdr e_header;
     Elf32_Shdr* shdr_table;
+    Elf32_Phdr* program_header_table;
+
     uint8_t** sections_data;
 
     uint16_t* progbits_sections;
@@ -43,6 +45,7 @@ typedef struct{
 
     Elf32_RelTable*  rel_tables;
     size_t rel_tables_size;
+
 
     hash_t sections_table;
 }Elf32_data;

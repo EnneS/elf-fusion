@@ -4,6 +4,10 @@
 void reverse_elf_data(Elf32_data* elf_data){
     reverse_elf_ehdr(&elf_data->e_header); // Reverse l'en-tête ELF
 
+    for(int i = 0; i < elf_data->e_header.e_phnum; i++){
+        reverse_elf_phdr(&elf_data->program_header_table[i]); // Reverse l'en-tête ELF
+    }
+
     // Reverse les en-têtes des sections
     for(int i = 0; i < elf_data->e_header.e_shnum; i++){
         reverse_elf_shdr(&elf_data->shdr_table[i]);
@@ -48,6 +52,18 @@ void reverse_elf_ehdr(Elf32_Ehdr* elf_hdr){
     elf_hdr->e_shentsize = reverse_2(elf_hdr->e_shentsize);
     elf_hdr->e_shnum = reverse_2(elf_hdr->e_shnum);
     elf_hdr->e_shstrndx = reverse_2(elf_hdr->e_shstrndx);
+}
+
+// Reverse De Elf32_Phdr
+void reverse_elf_phdr(Elf32_Phdr* elf_phdr){
+    elf_phdr->p_type = reverse_4(elf_phdr->p_type);   
+    elf_phdr->p_offset = reverse_4(elf_phdr->p_offset);
+    elf_phdr->p_vaddr = reverse_4(elf_phdr->p_vaddr);
+    elf_phdr->p_paddr = reverse_4(elf_phdr->p_paddr);
+    elf_phdr->p_filesz = reverse_4(elf_phdr->p_filesz);
+    elf_phdr->p_memsz = reverse_4(elf_phdr->p_memsz);
+    elf_phdr->p_flags = reverse_4(elf_phdr->p_flags);
+    elf_phdr->p_align = reverse_4(elf_phdr->p_align);    
 }
 
 // Reverse de Elf32_Shdr
