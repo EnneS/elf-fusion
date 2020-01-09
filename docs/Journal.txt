@@ -1,0 +1,51 @@
+------------JOURNAL------------
+
+
+---REPARTITION DU TRAVAIL---
+
+Julian ROYET :
+	fonctions de la phase 1, partie lecture 
+	fonctions de la phase 2 
+
+Nathan SOULIER :
+	fonctions de la phase 1, partie lecture 
+	fonctions de la phase 2 
+
+Kevin PORQUERES :
+	fonctions de la phase 1, partie affichage 
+
+Cleo SURVILLE :
+	fonctions de la phase 1, partie affichage 
+
+Robin DENEUX-SOUTDE :
+	Documentation 
+
+Dimitri CROSS : 
+	Fonctions de la phase 1, lecture 
+
+ 
+
+---JOURNAL---
+
+Jeudi 12/12 - Vendredi 13/12 - Prise de connaissance du sujet et de la documentation
+et essais individuelles de codage pour se familiariser avec le projet. 
+
+Lundi 16/12 - Etapes 1,2,3 Lecture 
+
+Mardi 17/12 - Etapes 4, 5 Lecture 
+
+Mercredi 18/12 - Etapes 1, 2 Affichage 
+
+Jeudi 19/12 - Serveur Mandelbrot inactif, peu d’avancement 
+
+Vendredi 19/12 - Réunion de fin de semaine et audit 
+
+ 
+
+Lundi 6/01 - Etapes 3, 4, 5 Affichage, Phase 2 
+
+Mardi 7/01 - Etapes 6, 7, Documentation 
+
+Mercredii 8/01 - Etapes 8, 9, Documentation 
+
+Jeudi 9/01 - Etapes 8, 9, Préparation du rendu et documentation 
