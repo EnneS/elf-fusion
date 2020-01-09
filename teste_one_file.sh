@@ -416,6 +416,50 @@ echo "/************** Debut teste sur le fichier $1 *******************/"
         i=$(($i+1))
     done
 
+    echo " "
+    echo "/************** Debut teste arm-eabi-readelf -r *******************/"
+    echo " "
+
+    texte=$(arm-none-eabi-readelf -r $1)
+    texteProgramme=$(./affichage_executable -r $1)
+    f=''
+    echo $f > fichierTexteShellArm.txt
+    for line in $texte
+    do 
+        echo $line$'\n' >> fichierTexteShellArm.txt
+    done
+    f=''
+    echo $f > fichierTexteShellProgramme.txt
+    for line in $texteProgramme
+    do 
+        echo $line$'\n' >> fichierTexteShellProgramme.txt
+    done
+
+    texteConcat=$(paste -d'\n' "fichierTexteShellArm.txt" "fichierTexteShellProgramme.txt")
+
+    i=0
+    for line in $texteConcat
+    do  
+        if [ `expr  $i % 2` -eq 0 ]
+        then
+            line=$(echo $line | sed "s/\ \ */\ /g")
+            ligne1=$(trim $line)
+        else 
+            line=$(echo $line | sed "s/\ \ */\ /g")
+            ligne2=$(trim $line)
+        fi
+        i=$((i+1))
+        if [ $i -eq 2 ]
+        then 
+            if [ "$ligne1" != "$lige2" ]
+            then
+                echo -e "différence realocation table \n arm-eabi : "$ligne1"\nprogramme : "$ligne2"\n"
+            fi
+            i=0
+        fi
+
+    done
+
     # #ON RESTAURE IFS
     IFS=$OLD_IFS
 
