@@ -1,6 +1,7 @@
 #include "affichage_elf.h"
 #include "util.h"
 
+#define SHF_COMPRESSED (1 << 11)
 char* OS_ABI[17] = {
     "System V", "HP-UX", "NetBSD", 
     "Linux", "GNU Hurd", "Solaris", 
@@ -207,6 +208,7 @@ void print_section_data(Elf32_data elf, size_t num){
     uint8_t* section_data = elf.sections_data[num];
     size_t size = shdr_table[num].sh_size;
     char* section_name = &str_table[shdr_table[num].sh_name];
+
     // Si la section contient des données, l'afficher
     if(size > 0) {
         int width = 4;
@@ -216,6 +218,7 @@ void print_section_data(Elf32_data elf, size_t num){
         int width_to_complete = width*8 + width - line_length - line_length/8;
 
         printf("Dump hexadécimal de la section '%s':\n", section_name);
+
         // Affichage ligne par ligne en HEXA et ASCII
         for(int i = 0; i <= height; i+=1){
             // Affichage en HEXA :
@@ -290,9 +293,10 @@ void print_symbol_table(Elf32_data elf){
 
         // Index
         int ndx = symbol.st_shndx;
-        ndx == 0 ? printf("%4s", "UND") : printf("%4d", ndx);
+        ndx == 0 ? printf("%4s ", "UND") : ndx == 0xfff1 ? printf("%4s ", "ABS") : printf("%4d ", ndx);
+
         // Affichage du symbole
-        printf("%5s",&sm_str_table[symbol.st_name]);
+        printf("%-15s",&sm_str_table[symbol.st_name]);
         printf("\n");
 
     }
@@ -324,7 +328,7 @@ void print_relocation_table(Elf32_data elf){
             int symbol = ELF32_R_SYM(rel.r_info); // Symbole
             printf("%9.8x ", symbol);
             int section_index = symbol_table[symbol].st_shndx;
-            printf("%14s", &str_table[shdr_table[section_index].sh_name]); // Nom de la section correspondante
+            printf("%-14s", &str_table[shdr_table[section_index].sh_name]); // Nom de la section correspondante
             printf("\n");
         }
         printf("\n");

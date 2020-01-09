@@ -19,13 +19,17 @@ int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t 
     return 0;
 }
 
-
 Elf32_data read_elf_data(FILE* file){
     Elf32_data elf_data;
 
     // Récupération de l'entête ELF
     if(read_elf_header(file, &elf_data.e_header)){
         fprintf(stderr, "couldn't recognize elf header\n");
+    }
+
+    // Vérification qu'il s'agit d'un fichier ELF
+    if(elf_data.e_header.e_ident[0] != 0x7f) {
+        fprintf(stderr, "N'est pas un fichier ELF - a les mauvais octets magiques au départ\n");
     }
 
     // Récupération des entêtes des sections
@@ -35,6 +39,7 @@ Elf32_data read_elf_data(FILE* file){
     if(read_elf_section_table(file, elf_data.shdr_table, reverse_4(elf_data.e_header.e_shoff), reverse_2(elf_data.e_header.e_shnum), reverse_2(elf_data.e_header.e_shentsize))){
         fprintf(stderr, "couldn't read section table\n");
     }
+
 
     // Allocation mémoire des tableaux
     size_t rela_count, rel_count, progbits_nbr;
@@ -139,7 +144,6 @@ Elf32_data read_elf_data(FILE* file){
         hash_insert(&elf_data.sections_table, get_name(&elf_data, i), i);
     }
 
-    
     return elf_data;
 }
 
