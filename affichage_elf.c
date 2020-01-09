@@ -68,11 +68,11 @@ void print_elf_header(Elf32_data elf){
 
     if (header.e_ident[5] == 1)
     {
-        printf("Données : Little Endian");
+        printf("Données : 2's complement, little endian");
     }
     else
     {
-        printf("Données : Big Endian");
+        printf("Données : 2's complement, big endian");
     }
 
     printf("\n");
@@ -95,7 +95,7 @@ void print_elf_header(Elf32_data elf){
         printf("PROC\n");
     }    
 
-    printf("\n");
+    // printf("\n");
 
     printf("Version : ");
     switch (header.e_version)
@@ -113,7 +113,7 @@ void print_elf_header(Elf32_data elf){
 
     printf("\n");
 
-    printf("Adresse du point d'entrée: 0x%.2x\n",header.e_entry);    
+    printf("Adresse du point d'entrée: 0x%.1x\n",header.e_entry);    
     printf("Début des en-têtes de programme: %d (octet dans le fichier)\n",header.e_phoff);    
     printf("Début des en-têtes de sections: %d (octet dans le fichier)\n",header.e_shoff);    
     printf("Fanions : 0x%x\n",header.e_flags);    
