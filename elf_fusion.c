@@ -27,6 +27,9 @@ void init_new_elf(Elf32_data* result, Elf32_data* base, Elf32_data* source){
     memcpy(result->shdr_table, base->shdr_table, sizeof(Elf32_Shdr) * base_shnum);
     memcpy(result->progbits_sections, base->progbits_sections, sizeof(uint16_t) * base->progbits_nbr);
 
+    // Copie de la program header table depuis le fichier de base
+    result->program_header_table = malloc(base->e_header.e_phnum * base->e_header.e_phentsize * sizeof(Elf32_Rel));
+    memcpy(result->program_header_table, base->program_header_table, base->e_header.e_phnum * base->e_header.e_phentsize * sizeof(Elf32_Rel));
 }
 
 
@@ -396,10 +399,12 @@ void correct_reloc(Elf32_data* result, int type, size_t sec_size, size_t offset,
 }
 
 void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table, uint32_t* base_srt, uint32_t* source_srt){
-    result->rel_tables = NULL;
-    result->rel_tables_size = 0;
-    result->rela_tables = NULL;
-    result->rela_tables_size = 0;
+    result->rel_tables = malloc(base->rel_tables_size * sizeof(Elf32_Rel));
+    memcpy(result->rel_tables, base->rel_tables, base->rel_tables_size * sizeof(Elf32_Rel));
+    result->rel_tables_size = base->rel_tables_size;
+    result->rela_tables = malloc(base->rela_tables_size * sizeof(Elf32_Rela));
+    memcpy(result->rela_tables, base->rela_tables, base->rela_tables_size * sizeof(Elf32_Rela));
+    result->rela_tables_size = base->rela_tables_size;
 
     uint16_t shnum = result->e_header.e_shnum;
     // On copie toutes les sections du premier, en fusionnant avec le deuxième si nécéssaire
@@ -420,13 +425,14 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
             uint16_t origin = result->shdr_table[i].sh_info;
             (void) origin;
 
-            // On regarde si la section existe dans le deuxième fichier
             char* section_name = get_name(base, i);
             int source_section_index = hash_lookup(&source->sections_table, section_name);
-            // Si c'est le cas on les fusionne, sinon on copie simplement la première
+            size_t source_sec_size = source->shdr_table[source_section_index].sh_size;
+            size_t sec_size = base_sec_size + source_sec_size + padding;
+            // On regarde si la section existe dans le deuxième fichier
+            // sinon on copie simplement la première
             if(source_section_index != HASH_FAIL){
-                size_t source_sec_size = source->shdr_table[source_section_index].sh_size;
-                size_t sec_size = base_sec_size + source_sec_size + padding;
+                
                 size_t offset = base_sec_size+padding;
                 memset(&result->sections_data[i][base_sec_size], 0, padding);
                 memcpy(&result->sections_data[i][offset], source->sections_data[source_section_index], source_sec_size);
@@ -439,7 +445,7 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
                 merge_table[source_section_index].section_index = i;
                 merge_table[source_section_index].offset = offset;
 
-            } 
+            }
         }
     }
     

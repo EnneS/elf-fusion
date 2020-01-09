@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
     printf("\n\n======== MERGE ========\n\n");
 
     merge(&result, &elf1_data, &elf2_data);
-    print_section_header_table(elf2_data);
+    print_section_header_table(result);
     print_symbol_table(result);
     print_relocation_table(result);
 

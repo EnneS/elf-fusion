@@ -41,6 +41,7 @@ void init_sections_table(Elf32_data* result);
 // Fusion de deux tables des symboles en entrées et rénumérotation deux ceux-ci
 void merge_symbol_table(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table, uint32_t* base_srt, uint32_t* source_srt);
 
+void correct_reloc(Elf32_data* result, int type, size_t sec_size, size_t offset, int i, uint32_t* srt);
 
 void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Section_Merge_Info* merge_table, uint32_t* base_srt, uint32_t* source_srt);
 

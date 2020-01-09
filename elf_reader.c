@@ -10,9 +10,15 @@ int read_elf_header(FILE* file, Elf32_Ehdr* header){
     return 0;
 }
 
-// Récupération des données d'une section à un offset donnée
-// Gère aussi s'il s'agit de plusieurs entrées
+// Lecture de l'en-tête des sections
 int read_elf_section_table(FILE* file, Elf32_Shdr* table, size_t offset, size_t nb_entries, size_t entry_size){
+    fseek(file, offset, SEEK_SET);
+    if(fread(table, entry_size, nb_entries, file) < nb_entries)
+        return -1;
+    return 0;
+}
+
+int read_elf_program_header_table(FILE* file, Elf32_Phdr* table, size_t offset, size_t nb_entries, size_t entry_size){
     fseek(file, offset, SEEK_SET);
     if(fread(table, entry_size, nb_entries, file) < nb_entries)
         return -1;
@@ -31,6 +37,14 @@ Elf32_data read_elf_data(FILE* file){
     if(elf_data.e_header.e_ident[0] != 0x7f) {
         fprintf(stderr, "N'est pas un fichier ELF - a les mauvais octets magiques au départ\n");
     }
+
+    //Récupération de la table de programme
+    elf_data.program_header_table = malloc(reverse_4(elf_data.e_header.e_phnum) * reverse_4(elf_data.e_header.e_phentsize));
+    
+    if(read_elf_program_header_table(file, elf_data.program_header_table, reverse_4(elf_data.e_header.e_phoff), reverse_4(elf_data.e_header.e_phnum), reverse_4(elf_data.e_header.e_phentsize))){
+        fprintf(stderr, "couldn't read program table\n");
+    }
+
 
     // Récupération des entêtes des sections
     elf_data.shdr_table = malloc(sizeof(Elf32_Shdr) * reverse_2(elf_data.e_header.e_shnum));
