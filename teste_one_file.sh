@@ -416,6 +416,55 @@ echo "/************** Debut teste sur le fichier $1 *******************/"
         i=$(($i+1))
     done
 
+    echo " "
+    echo "/************** Debut teste arm-eabi-readelf -r *******************/"
+    echo " "
+    echo "Différence relocation table "$'\n' > differenceRelocationTable.txt
+
+    texte=$(arm-none-eabi-readelf -r $1)
+    texteProgramme=$(./affichage_executable -r $1)
+    f=''
+    echo $f > fichierTexteShellArm.txt
+    for line in $texte
+    do 
+        echo $line$'\n' >> fichierTexteShellArm.txt
+    done
+    f=''
+    echo $f > fichierTexteShellProgramme.txt
+    for line in $texteProgramme
+    do 
+        echo $line$'\n' >> fichierTexteShellProgramme.txt
+    done
+
+    #ON RECUPERE LE FICHIER ON A A CHAQUE FOIS UNE LIGNE SUR DEUX DE ARM ET L'AUTRE DU PROGRAMME, IL FAUT APRES LES COMPARER
+    texteConcat=$(paste -d'\n' "fichierTexteShellArm.txt" "fichierTexteShellProgramme.txt")
+
+    i=0
+    for line in $texteConcat
+    do  
+        if [ `expr  $i % 2` -eq 0 ]
+        then
+            line=$(echo $line | sed "s/\ \ */\ /g")
+            ligne1=$(trim $line)
+        else 
+            line=$(echo $line | sed "s/\ \ */\ /g")
+            ligne2=$(trim $line)
+        fi
+        i=$((i+1))
+        if [ $i -eq 2 ]
+        then 
+            #ON COMPARE LES DEUX LIGNES
+            if [ "$ligne1" != "$lige2" ]
+            then
+                echo -e "différence realocation table \n arm-eabi : "$ligne1"\nprogramme : "$ligne2"\n" >> differenceRelocationTable.txt
+            fi
+            i=0
+        fi
+
+    done
+
+    echo "Les différence sont marqué dans le fichier differenceRelocationTable.txt"
+
     # #ON RESTAURE IFS
     IFS=$OLD_IFS
 

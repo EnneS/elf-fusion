@@ -1,0 +1,13 @@
+---Etapes complétées
+
+	1 - Fonctionnel et testé
+	2 - Fonctionnel et testé
+	3 - Fonctionnel et testé
+	4 - Fonctionnel et testé
+	5 - Fonctionnel et testé
+	6 - Fonctionnel
+	7 - Fonctionnel
+	8 - Incomplet
+	9 - Incomplet	
+	
+---Bugs
