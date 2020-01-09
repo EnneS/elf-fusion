@@ -1,0 +1,6 @@
+Pour le script de teste il faut lancer la commande ./teste_all_files.sh qui va lancer le teste de fichier individuel sur chaque fichier .o du dossier Exemple_loader/
+Le script ./teste_one_file.sh lui execute chaque commande d'affichage. A chaque fois il execute la commande de arm-eabi-readelf, extrait les informations puis les compares afin de voir s'il y a des différences.
+Ils les afiches dans le terminal s'il y en a.
+Il est possible de lancer un teste sur un seul fichier en executant ./teste_one_file.sh et en donnant en paramètre le fichier à tester.
+Certaines fois les données sont bonnes mais les affichage n'étant pas similaire ( ex: différence de langue, ajout d'un s sur certain mot), le script détecte tout de même des erreurs. 
+Pour permmetre à l'utilisateur de voir si c'est vraiment une erreur on mais les informations l'une sur l'autre pour permmetreà l'utilisateurde voir par lui même.
