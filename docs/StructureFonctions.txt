@@ -76,17 +76,81 @@ affichage_executable.c
 
 elf_fusion.c
 
-// AU SECOURS //
+  void  init_new_elf;
+    --Entré: 
+	trois structures Elf32_data base, source et result
+    --Sortie:
+      On initialise la nouvelle structure créée (result) à partir des deux autres (base et source).
 
+  void merge_str_table;
+	--Entré:     
+ 	trois structures Elf32_data base, source et result et une structure Section_Merge_Info merge_table
+    --Sortie:
+    Fusionne la str_table dans result à partir de celle de base et source, merge_table permet de savoir à quelle offset était le début des données du fichier source pour une section donnée.
+    
+
+   void concat_progbits;   
+    --Entré: 
+ 	trois structures Elf32_data base, source et result et une structure Section_Merge_Info merge_table
+    --Sortie:
+	Fusionne la progbits_sections dans result à partir de celle de base et source, merge_table permet de savoir à quelle offset était le début des données du fichier source pour une section donnée.
+
+  void add_symbol;
+    --Entré: 
+	Une table des symboles (Elf32_Sym*), un symbol (Elf32_sym) et un index (size_t*)
+    --Sortie:
+    Ajout d’un symbole à son index dans la table des symboles.
+
+   int is_symbol_undefined;
+    --Entré: 
+ 	un symbol (Elf32_sym)
+    --Sortie:
+    retourne 1 quand le symbole est indéfini (bind = SHN_UNDEF), 0 sinon.
+
+  int should_relocate_symbol;
+    --Entré:     
+ 	un symbol (Elf32_sym)
+    --Sortie:
+    retourne 1 si le symbole n’est pas défini (!=SHN_UNDEF) ni absolu (!=SHN_ABS), 0 sinon
+
+  char* get_symbol_name;
+    --Entré: 
+	une structures (Elf32_data) et une table des symboles (Elf32_Sym)
+    --Sortie: 
+    Chaîne de caractère représentant le nom du symbole dans la table des symboles. 
+
+ size_t add_to_sm_str_table;
+    --Entré:
+      sm_str_table (char**), sm_str_table (size_t*) et name (char*) 
+    --Sortie: 
+    Ajoute le nom d’un symbole à la table des symboles et retourne la position à laquel elle à été ajouté.
+
+ void merge_symbol_table;
+    --Entré:
+      trois structures Elf32_data base, source et result et une structure Section_Merge_Info merge_table
+	--Sortie:
+    fusionne les tables des symboles des deux structures base et source dans result (plus renumérotation des symboles).
+
+  void init_sections_table;
+    --Entré:
+      une structures (Elf32_data*) result
+    --Sortie:
+    Initialisation de la hastable des sections de result.
+
+  void merge;
+    --Entré:
+       trois structures Elf32_data base, source et result
+    --Sortie:
+    Utilise les fonctions précédentes pour effectuer la fusion complète des structures base et source dans une stucture result.
 
 
 elf_reader.c
 
   read_elf_header;
     --Entré:
-      //A compléter//
+      Fichier elf et une structure (Elf32_Ehdr*)
     --Sortie:
-      Commence la lecture du fichier elf passé en paramètre et recherche son header,
+      Remplissage de la structure header à partir du fichier file.
       retourne 0 en cas de succès et -1 sinon.
 
 
@@ -100,26 +164,95 @@ elf_reader.c
 
   read_elf_data
     --Entré:
-      //A compléter//
+      Fichier elf
     --Sortie:
-      //A compléter//
+      Récupère les données d'un fichier elf (aprés vérification qu'il s'en agisse bien d'un), alloue de la mémoire afin de remplir et renvoyer une structure Elf32_data.
 
   free_elf_data
     --Entré:
-      Fichier elf
+      une structures (Elf32_data*)
     --Sortie:
-      Permet de libérer la mémoire.
+      Permet de libérer la mémoire alloué pour la structure.
 
 fusion.c
 
-  usage;
+  void usage;
     --Entré:
-      Aucune
+      Nom de la fonction
     --Sortie:
       Affiche la syntaxe d'utilisation de la fonction.
 
   main;
     --Entré:
-      Arguments :   //A compléter//
+      Arguments : Deux fichiers elf 
     --Sortie:
-      //A compléter//
+      Les deux structures compléter ainsi que leurs affichage.
+
+hashtable.c
+	
+	Nous avons récupérer L'ensemble de fichier hastable.c sur internet nous permettant l'utilisation des tables de hashages :
+	
+	/***************************************************************************
+ *cr
+ *cr            (C) Copyright 1995-2019 The Board of Trustees of the
+ *cr                        University of Illinois
+ *cr                         All Rights Reserved
+ *cr
+ ***************************************************************************/
+ 
+	La table de hashage est une structure de données permettant l'association d'une clé à un élément, c'est à dire qu'on accède à un élément uniquement à partir de sa clé.
+	
+
+elf_file.c
+
+  char* get_name;
+   --Entré:
+   Une structure (Elf32_data*) et un indexe de section (size_t).
+   --Sortie:  
+   Renvoi le nom de la section.
+  
+elf_file_reverse.c
+
+	Parti permettant l'inversion de l'endianness 
+	
+ 	 void reverse_elf_data(Elf32_data* elf_data);
+	    --Entré:
+  	    une structures (Elf32_data*)
+  		 --Sortie:
+  	    Reverse de Elf32_data.
+  	    
+  	    
+	void reverse_elf_ehdr(Elf32_Ehdr* elf_hdr);
+		--Entré:
+  	    une entête (Elf32_Ehdr*)
+  		 --Sortie:
+  	    Reverse de Elf32_Ehdr.
+  	    
+	void reverse_elf_shdr(Elf32_Shdr* elf_shdr);
+		--Entré:
+  	    une table d'entête de section (Elf32_Shdr*)
+  		 --Sortie:
+  	    Reverse de Elf32_Shdr.
+  	    
+  	    
+	void reverse_elf_sym(Elf32_Sym* elf_sym);
+		--Entré:
+  	    la table des symboles (Elf32_Sym*)
+  		 --Sortie:
+  	    Reverse de Elf32_Sym.
+  	    
+	void reverse_elf_rel(Elf32_Rel* elf_rel);
+		--Entré:
+  	    la table des relations (sans addends)(Elf32_Rel*) 
+  		 --Sortie:
+  	    Reverse de Elf32_Rel.
+  	    
+	void reverse_elf_rela(Elf32_Rela* elf_rela);
+		--Entré:
+  	    une structures (avec addends)(Elf32_Rela*)
+  		 --Sortie:
+  	    Reverse de Elf32_Rela.
+  
+  
+  
+

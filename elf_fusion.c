@@ -406,19 +406,15 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
     result->rel_tables_size = 0;
     result->rela_tables = NULL;
     result->rela_tables_size = 0;
-    /*result->rel_tables = malloc(base->rel_tables_size * sizeof(Elf32_Rel));
-    memcpy(result->rel_tables, base->rel_tables, base->rel_tables_size * sizeof(Elf32_Rel));
-    result->rel_tables_size = base->rel_tables_size;
-    result->rela_tables = malloc(base->rela_tables_size * sizeof(Elf32_Rela));
-    memcpy(result->rela_tables, base->rela_tables, base->rela_tables_size * sizeof(Elf32_Rela));
-    result->rela_tables_size = base->rela_tables_size;
-*/
+
     uint16_t shnum = result->e_header.e_shnum;
+    uint16_t symtab_idx = hash_lookup(&result->sections_table, ".symtab");
+
     // On copie toutes les sections du premier, en fusionnant avec le deuxième si nécéssaire
     for(int i = 0; i < shnum; ++i){
         size_t base_sec_size = result->shdr_table[i].sh_size;
 
-        //alignement
+        // Alignement
         size_t align = result->shdr_table[i].sh_addralign;
         size_t padding = 0;
         if(align > 0){
@@ -428,16 +424,11 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
         uint32_t type = result->shdr_table[i].sh_type;
         // Pour les sections rel rela
         if(type == SHT_REL || type == SHT_RELA){
-            //Section associée
-            uint16_t origin = result->shdr_table[i].sh_info;
-            (void) origin;
-
             char* section_name = get_name(base, i);
             int source_section_index = hash_lookup(&source->sections_table, section_name);
             size_t source_sec_size = source->shdr_table[source_section_index].sh_size;
             size_t sec_size = base_sec_size + source_sec_size + padding;
             // On regarde si la section existe dans le deuxième fichier
-            // sinon on copie simplement la première
             if(source_section_index != HASH_FAIL){
                 // Les deux existent, on fusionne
                 size_t offset = base_sec_size+padding;
@@ -454,6 +445,7 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
 
             }
             else{
+                // sinon on copie simplement la première
                 size_t nb_entries = base_sec_size / base->shdr_table[i].sh_entsize;
                 correct_reloc(result, type, nb_entries, 0, i, base_srt);
             }
@@ -481,10 +473,13 @@ void concat_reloc(Elf32_data* result, Elf32_data* base, Elf32_data* source, Sect
                 result->sections_data[res_idx-1] = malloc(source_sec_size);
                 memcpy(result->sections_data[res_idx-1], source->sections_data[i], source_sec_size);
                 
+                // Ajout de l'en-tête de section à la table et mise à jour de ses infos
                 result->shdr_table = realloc(result->shdr_table, res_idx * sizeof(Elf32_Shdr));
                 result->shdr_table[res_idx-1] = source->shdr_table[i];
-                result->shdr_table[res_idx-1].sh_name += base->str_table_size;
+                result->shdr_table[res_idx-1].sh_name += base->str_table_size; // Offset du nom de sa section
+                result->shdr_table[res_idx-1].sh_link = symtab_idx; // Le nouvel index de la symtab
 
+                // Correction de la table de réimplantation
                 correct_reloc(result, type, nb_entries, 0, res_idx-1, source_srt);
                 
                 merge_table[source_section_index].section_index = res_idx;
@@ -499,14 +494,17 @@ void merge(Elf32_data* result, Elf32_data* base, Elf32_data* source){
     uint32_t* base_srt = malloc(base->symbol_table_size * sizeof(uint32_t));
     uint32_t* source_srt = malloc(source->symbol_table_size * sizeof(uint32_t));
     Section_Merge_Info* merge_table = malloc(sizeof(Section_Merge_Info) * source->e_header.e_shnum);
-    init_new_elf(result, base, source);
-    concat_progbits(result, base, source, merge_table);
-    merge_str_table(result, base, source, merge_table);
 
+    init_new_elf(result, base, source); // Initialisation de la structure Elf32_data résultat
 
-    init_sections_table(result);
-    merge_symbol_table(result, base, source, merge_table, base_srt, source_srt);
+    concat_progbits(result, base, source, merge_table); // Fusion des sections ce type PROGBITS
+
+    merge_str_table(result, base, source, merge_table); // Fusion de la string table des noms de section
+
+    init_sections_table(result); // Initialisation de la hastable des sections de result
+
+    merge_symbol_table(result, base, source, merge_table, base_srt, source_srt); // Fusion de deux tables des symboles en entrées et rénumérotation deux ceux-ci
      
-    concat_reloc(result, base, source, merge_table, base_srt, source_srt);
+    concat_reloc(result, base, source, merge_table, base_srt, source_srt); // Fusion des tables de réimplantations
    
 }

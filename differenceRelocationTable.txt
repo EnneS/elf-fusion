@@ -1,24 +1,8 @@
 Différence relocation table 
 
 différence realocation table 
- arm-eabi : Relocation section '.rel.text' at offset 0x260 contains 2 entries:
-programme : Section de réadressage '.rel.text' à l'adresse de décalage 0x260 contient 2 entrées:
-
-différence realocation table 
- arm-eabi : Offset Info Type Sym.Value Sym. Name
-programme : Décalage Info Type Val.-sym Noms-symboles
-
-différence realocation table 
- arm-eabi : 0000001c 00000202 R_ARM_ABS32 00000000 .data
-programme : 0000001c 00000202 2 00000000 .data
-
-différence realocation table 
- arm-eabi : 00000020 00000202 R_ARM_ABS32 00000000 .data
-programme : 00000020 00000202 2 00000000 .data
-
-différence realocation table 
- arm-eabi : Relocation section '.rel.debug_line' at offset 0x270 contains 1 entry:
-programme : Section de réadressage '.rel.debug_line' à l'adresse de décalage 0x270 contient 1 entrées:
+ arm-eabi : Relocation section '.rel.debug_line' at offset 0x238 contains 1 entries:
+programme : Section de réadressage '.rel.debug_line' à l'adresse de décalage 0x238 contient 1 entrées:
 
 différence realocation table 
  arm-eabi : Offset Info Type Sym.Value Sym. Name
@@ -29,20 +13,20 @@ différence realocation table
 programme : 0000002e 00000102 2 00000000 .text
 
 différence realocation table 
- arm-eabi : Relocation section '.rel.debug_info' at offset 0x278 contains 7 entries:
-programme : Section de réadressage '.rel.debug_info' à l'adresse de décalage 0x278 contient 7 entrées:
+ arm-eabi : Relocation section '.rel.debug_info' at offset 0x240 contains 4 entries:
+programme : Section de réadressage '.rel.debug_info' à l'adresse de décalage 0x240 contient 4 entrées:
 
 différence realocation table 
  arm-eabi : Offset Info Type Sym.Value Sym. Name
 programme : Décalage Info Type Val.-sym Noms-symboles
 
 différence realocation table 
- arm-eabi : 00000006 00000902 R_ARM_ABS32 00000000 .debug_abbrev
-programme : 00000006 00000902 2 00000000 .debug_abbrev
+ arm-eabi : 00000006 00000802 R_ARM_ABS32 00000000 .debug_abbrev
+programme : 00000006 00000802 2 00000000 .debug_abbrev
 
 différence realocation table 
- arm-eabi : 0000000c 00000a02 R_ARM_ABS32 00000000 .debug_line
-programme : 0000000c 00000a02 2 00000000 .debug_line
+ arm-eabi : 0000000c 00000902 R_ARM_ABS32 00000000 .debug_line
+programme : 0000000c 00000902 2 00000000 .debug_line
 
 différence realocation table 
  arm-eabi : 00000010 00000102 R_ARM_ABS32 00000000 .text
@@ -53,28 +37,16 @@ différence realocation table
 programme : 00000014 00000102 2 00000000 .text
 
 différence realocation table 
- arm-eabi : 00000018 00000b02 R_ARM_ABS32 00000000 .debug_str
-programme : 00000018 00000b02 2 00000000 .debug_str
-
-différence realocation table 
- arm-eabi : 0000001c 00000b02 R_ARM_ABS32 00000000 .debug_str
-programme : 0000001c 00000b02 2 00000000 .debug_str
-
-différence realocation table 
- arm-eabi : 00000020 00000b02 R_ARM_ABS32 00000000 .debug_str
-programme : 00000020 00000b02 2 00000000 .debug_str
-
-différence realocation table 
- arm-eabi : Relocation section '.rel.debug_aranges' at offset 0x2b0 contains 2 entries:
-programme : Section de réadressage '.rel.debug_aranges' à l'adresse de décalage 0x2b0 contient 2 entrées:
+ arm-eabi : Relocation section '.rel.debug_aranges' at offset 0x260 contains 2 entries:
+programme : Section de réadressage '.rel.debug_aranges' à l'adresse de décalage 0x260 contient 2 entrées:
 
 différence realocation table 
  arm-eabi : Offset Info Type Sym.Value Sym. Name
 programme : Décalage Info Type Val.-sym Noms-symboles
 
 différence realocation table 
- arm-eabi : 00000006 00000802 R_ARM_ABS32 00000000 .debug_info
-programme : 00000006 00000802 2 00000000 .debug_info
+ arm-eabi : 00000006 00000702 R_ARM_ABS32 00000000 .debug_info
+programme : 00000006 00000702 2 00000000 .debug_info
 
 différence realocation table 
  arm-eabi : 00000010 00000102 R_ARM_ABS32 00000000 .text
